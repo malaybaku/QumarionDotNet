@@ -1,0 +1,119 @@
+Microsoft (R) COFF/PE Dumper Version 14.00.23506.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file C:\Users\___\Desktop\dll\debug\x86\QmPdkDll.dll
+
+File Type: DLL
+
+  Section contains the following exports for QmPdkDll.dll
+
+    00000000 characteristics
+    50C69B29 time date stamp Tue Dec 11 11:32:09 2012
+        0.00 version
+           1 ordinal base
+          90 number of functions
+          90 number of names
+
+    ordinal hint RVA      name
+
+          1    0 00407494 ?QmLowActivateQuma@@YAHPAXPAUt_QmLowActivateInfo@@@Z
+          2    1 0041540E ?QmLowComputeBoneMatrix@@YAHPAX0PAM@Z
+          3    2 0041B16A ?QmLowComputeSensorAngle@@YAHPAX0PAM@Z
+          4    3 0041099A ?QmLowDeleteBufferHistory@@YAHPAPAX@Z
+          5    4 0040CAE3 ?QmLowDeleteQumaHandle@@YAHPAX@Z
+          6    5 0040CE08 ?QmLowEnumlateQumaIDs@@YAHPAUt_QmLowQumaID@@PAH@Z
+          7    6 00426EED ?QmLowExit@@YAHXZ
+          8    7 0041CA1A ?QmLowGetAccelerometer@@YAHPAXPAM@Z
+          9    8 00411D90 ?QmLowGetAccelerometerPoseMatrix@@YAHPAXPAM@Z
+         10    9 0040852E ?QmLowGetBoneByName@@YAPAXPAXPB_W@Z
+         11    A 004179CF ?QmLowGetBoneName@@YAXPAXPA_W@Z
+         12    B 0040EDB1 ?QmLowGetBonePosition@@YAXPAXPAM@Z
+         13    C 00421254 ?QmLowGetBufferHistory@@YAHPAXPAPAPAX@Z
+         14    D 0041387A ?QmLowGetBufferHistoryCount@@YAHPAPAX@Z
+         15    E 00424F99 ?QmLowGetButtonState@@YAHPAXW4QMLOW_BUTTON_TYPE@@PAW4QMLOW_BUTTON_STATE@@@Z
+         16    F 0040F801 ?QmLowGetChildBone@@YAPAXPAXH@Z
+         17   10 0040FBF3 ?QmLowGetChildCount@@YAHPAX@Z
+         18   11 0040F5E0 ?QmLowGetDeviceID@@YAXPAXPAE@Z
+         19   12 00420359 ?QmLowGetDeviceName@@YAXPAXPA_W@Z
+         20   13 00422ED8 ?QmLowGetQumaHandle@@YAHUt_QmLowQumaID@@PAPAX@Z
+         21   14 00414EFF ?QmLowGetRootBone@@YAPAXPAX@Z
+         22   15 004260BF ?QmLowGetSensor@@YAPAXPAXH@Z
+         23   16 0040FA4F ?QmLowGetSensorAxis@@YAXPAXPAM@Z
+         24   17 00418C17 ?QmLowGetSensorCount@@YAHPAX@Z
+         25   18 004222E9 ?QmLowGetSensorState@@YA?AW4QMLOW_SENSOR_STATE@@PAX0@Z
+         26   19 00419F6D ?QmLowGetVersion@@YAXPA_W@Z
+         27   1A 0040E799 ?QmLowInitialize@@YAHXZ
+         28   1B 00405400 ?QmLowSetCoordinateSystem@@YAXW4QMLOW_COORDINATE_SYSTEM@@@Z
+         29   1C 0041501C ?QmLowSetDebugWrite@@YAX_N@Z
+         30   1D 00414E46 ?QmLowSetRotateDirection@@YAXW4QMLOW_ROTATE_DIRECTION@@@Z
+         31   1E 0042567E ?QmLowSetTimeout@@YAHPAXI@Z
+         32   1F 00407CD2 ?QmLowUpdateBuffer@@YAHPAX@Z
+         33   20 00418A9B ?QmLowUpdateBufferOneStep@@YAHPAXPAPAXH@Z
+         34   21 00420F25 ?QmLowUpdateQumaHandle@@YAHPAX@Z
+         35   22 0041E658 ?QmPdkCalibratePose@@YAHH@Z
+         36   23 00409C2B ?QmPdkCharacterCreate@@YAHPAHH0PAPBD@Z
+         37   24 0041776D ?QmPdkCharacterCreateStandardModelPS@@YAHPAH00@Z
+         38   25 0041C966 ?QmPdkCharacterDestroy@@YAHH@Z
+         39   26 0040661B ?QmPdkCharacterGetAccelerometerMode@@YAHHPAH@Z
+         40   27 004090FF ?QmPdkCharacterGetHandle@@YAHHPAH@Z
+         41   28 00413497 ?QmPdkCharacterGetLocalMatrix@@YAHHHQAY03M@Z
+         42   29 00407DFE ?QmPdkCharacterGetName@@YAHHHPADH0H@Z
+         43   2A 0042042B ?QmPdkCharacterGetNumOfHandle@@YAHPAH@Z
+         44   2B 0041824E ?QmPdkCharacterGetQumaHandle@@YAHHPAH@Z
+         45   2C 0041A4DB ?QmPdkCharacterGetRestrictAccelerometerMode@@YAHHPAH@Z
+         46   2D 00425908 ?QmPdkCharacterGetRotate@@YAHHHQAY03M@Z
+         47   2E 00414B21 ?QmPdkCharacterMemorizeInitialPose@@YAHH@Z
+         48   2F 004203B8 ?QmPdkCharacterRecallInitialPose@@YAHH@Z
+         49   30 00406ED6 ?QmPdkCharacterSetAccelerometerMode@@YAHHH@Z
+         50   31 004061B6 ?QmPdkCharacterSetLocalMatrix@@YAHHHQAY03M@Z
+         51   32 0041FB70 ?QmPdkCharacterSetRestrictAccelerometerMode@@YAHHH@Z
+         52   33 0041EAB3 ?QmPdkCharacterSetRotate@@YAHHHQAY03M@Z
+         53   34 00406D0F ?QmPdkCopyPose@@YAHH@Z
+         54   35 0041D163 ?QmPdkDebugFlags@@YAHPBD@Z
+         55   36 0040F2CF ?QmPdkDisconnect@@YAHXZ
+         56   37 0042557F ?QmPdkEnable@@YAHHH@Z
+         57   38 00415C3D ?QmPdkEnableAccelerometer@@YAHHH@Z
+         58   39 00417939 ?QmPdkFinal@@YAHXZ
+         59   3A 004109F9 ?QmPdkGetVersionStr@@YAHPADPAH@Z
+         60   3B 00425E9E ?QmPdkInit@@YAHXZ
+         61   3C 0041443C ?QmPdkIsEnable@@YAHHPAH@Z
+         62   3D 0042863F ?QmPdkLoadCalibrationDataFile@@YAHHPBD@Z
+         63   3E 0041CBA5 ?QmPdkLoadCalibrationDataMem@@YAHHPBDH@Z
+         64   3F 0040AD47 ?QmPdkNnbAddGroup@@YAHHHHPAHH00@Z
+         65   40 004051DF ?QmPdkNnbApply@@YAHH@Z
+         66   41 004254DF ?QmPdkNnbCreateRootGroup@@YAHHHHPAH@Z
+         67   42 0041F346 ?QmPdkNnbIsValid@@YAHHPAH@Z
+         68   43 00418898 ?QmPdkNnbLoadFromFile@@YAHHPBD0@Z
+         69   44 004058CE ?QmPdkNnbLoadFromMem@@YAHHPBDH@Z
+         70   45 00410012 ?QmPdkNnbSaveToFile@@YAHHHPBD@Z
+         71   46 00406882 ?QmPdkNnbSaveToMem@@YAHHHPADPAH@Z
+         72   47 00411F61 ?QmPdkQumaAttachInitPoseModel@@YAHHH@Z
+         73   48 00425BFB ?QmPdkQumaCheckDeviceSensors@@YAHHPAHPAD0@Z
+         74   49 0041ECF2 ?QmPdkQumaDebugSetScriptForQumax@@YAHHPBD@Z
+         75   4A 0041264B ?QmPdkQumaDetachModel@@YAHH@Z
+         76   4B 00426E66 ?QmPdkQumaGetButtonState@@YAHHHPAH@Z
+         77   4C 0040F860 ?QmPdkQumaGetDeviceName@@YAHHPADPAH@Z
+         78   4D 0040E8AC ?QmPdkQumaGetDeviceState@@YAHH@Z
+         79   4E 004172B3 ?QmPdkQumaGetHandle@@YAHHPAH@Z
+         80   4F 0041761E ?QmPdkQumaGetNumOfAttachedModel@@YAHHPAH@Z
+         81   50 004184C4 ?QmPdkQumaGetNumOfHandle@@YAHPAH@Z
+         82   51 004232CF ?QmPdkQumaIsPoseChanged@@YAHHPAH@Z
+         83   52 0041D6D6 ?QmPdkSaveCalibrationDataFile@@YAHHPBD@Z
+         84   53 00416746 ?QmPdkSaveCalibrationDataMem@@YAHHPADPAH@Z
+         85   54 00427979 ?QmPdkSetForcedCopyPose@@YAHH@Z
+         86   55 00406A80 ?QmPdkTemplateGetChildNodeIdx@@YAHHHPAH0@Z
+         87   56 0041D20D ?QmPdkTemplateGetIdx@@YAHHPADPAH@Z
+         88   57 0041D3DE ?QmPdkTemplateGetName@@YAHHHPADH@Z
+         89   58 0041EE64 ?QmPdkTemplateGetParentNodeIdx@@YAHHHPAH@Z
+         90   59 004214B1 ?QmPdkTemplateGetRootNodeIdx@@YAHHPAH@Z
+
+  Summary
+
+       AB000 .data
+        7000 .idata
+      17C000 .rdata
+       4A000 .reloc
+        1000 .rsrc
+      843000 .text
+      403000 .textbss

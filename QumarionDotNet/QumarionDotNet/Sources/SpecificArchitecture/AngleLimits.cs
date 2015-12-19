@@ -101,10 +101,10 @@ namespace Baku.Quma
 
                 { Sensors.L_Shoulder_X1, 225.0f },
                 { Sensors.L_Shoulder_MZ, 135.0f },
-                { Sensors.L_Shoulder_X2, -135.0f },
+                { Sensors.L_Shoulder_X2, 135.0f },
                 { Sensors.L_Elbow_MY, 30.0f },
-                { Sensors.L_Hand_X, -150.0f },
-                { Sensors.L_Hand_MZ, -90.0f },
+                { Sensors.L_Hand_X, 150.0f },
+                { Sensors.L_Hand_MZ, 90.0f },
 
                 { Sensors.R_Shoulder_MX1, 60.0f },
                 { Sensors.R_Shoulder_MZ, 60.0f },

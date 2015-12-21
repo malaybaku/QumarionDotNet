@@ -1,22 +1,21 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Baku.Quma;
+using Baku.Quma.Low;
 
-namespace QumarionCSTest
+namespace TestQumarionDotNet
 {
     [TestClass]
     public class QumarionManagerTest
     {
         [TestMethod]
-        public void QManager_初期化と終了()
+        public void QManager_初期化()
         {
-            Assert.IsFalse(QumarionManager.Initialized);
-
             QumarionManager.Initialize();
             Assert.IsTrue(QumarionManager.Initialized);
 
-            QumarionManager.Exit();
-            Assert.IsFalse(QumarionManager.Initialized);
+            //終了テストは廃止: 連続するテストの途中でExit呼び出すのはリスクが高い
+            //QumarionManager.Exit();
+            //Assert.IsFalse(QumarionManager.Initialized);
         }
 
         [TestMethod]

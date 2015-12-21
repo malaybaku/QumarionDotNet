@@ -77,23 +77,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sources\SpecificArchitecture\AngleLimits.cs" />
-    <Compile Include="Sources\QumarionComponents\Bone.cs" />
-    <Compile Include="Sources\SpecificArchitecture\Bones.cs" />
-    <Compile Include="Sources\Utils\Enumerates.cs" />
-    <Compile Include="Sources\QumarionComponents\GeneralizedQumarion.cs" />
-    <Compile Include="Sources\Utils\HandleClasses.cs" />
-    <Compile Include="Sources\Utils\Matrix4.cs" />
+    <Compile Include="Sources\Pdk\PdkApi\PdkApi.cs" />
+    <Compile Include="Sources\Low\SpecificArchitecture\AngleLimits.cs" />
+    <Compile Include="Sources\Low\QumarionComponents\Bone.cs" />
+    <Compile Include="Sources\Low\SpecificArchitecture\Bones.cs" />
+    <Compile Include="Sources\Low\Utils\Enumerates.cs" />
+    <Compile Include="Sources\Low\QumarionComponents\GeneralizedQumarion.cs" />
+    <Compile Include="Sources\Low\Utils\HandleClasses.cs" />
+    <Compile Include="Sources\Low\Utils\Matrix4.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sources\LowApi\QumaAPI.cs" />
-    <Compile Include="Sources\Utils\QumaException.cs" />
-    <Compile Include="Sources\Utils\QumaId.cs" />
-    <Compile Include="Sources\QumarionComponents\Qumarion.cs" />
-    <Compile Include="Sources\SpecificArchitecture\QumarionDeviceMap.cs" />
-    <Compile Include="Sources\QumarionComponents\QumarionManager.cs" />
-    <Compile Include="Sources\QumarionComponents\Sensor.cs" />
-    <Compile Include="Sources\SpecificArchitecture\Sensors.cs" />
-    <Compile Include="Sources\Utils\Vector3.cs" />
+    <Compile Include="Sources\Low\LowApi\LowApi.cs" />
+    <Compile Include="Sources\Low\Utils\QumaException.cs" />
+    <Compile Include="Sources\Low\Utils\QumaId.cs" />
+    <Compile Include="Sources\Low\QumarionComponents\Qumarion.cs" />
+    <Compile Include="Sources\Low\SpecificArchitecture\QumarionDeviceMap.cs" />
+    <Compile Include="Sources\Low\QumarionComponents\QumarionManager.cs" />
+    <Compile Include="Sources\Low\QumarionComponents\Sensor.cs" />
+    <Compile Include="Sources\Low\SpecificArchitecture\Sensors.cs" />
+    <Compile Include="Sources\Low\Utils\Vector3.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="dll\release\x64\QmPdkDll.dll">

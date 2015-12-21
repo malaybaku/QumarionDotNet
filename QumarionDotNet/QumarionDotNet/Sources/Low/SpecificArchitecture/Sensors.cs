@@ -1,5 +1,5 @@
 ﻿
-namespace Baku.Quma
+namespace Baku.Quma.Low
 {
     /// <summary>
     /// 実機のQumarionで確認したセンサーの一覧です。

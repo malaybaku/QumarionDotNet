@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Baku.Quma.Low;
+using Baku.Quma.Low.Api;
 
-namespace Baku.Quma
+namespace Baku.Quma.Low
 {
     /// <summary>事前知識をもとにボーンとセンサに名前を割り当てたQumarionデバイスを表します。</summary>
     public sealed class Qumarion : GeneralizedQumarion

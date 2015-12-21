@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 
-using Baku.Quma.Low;
+using Baku.Quma.Low.Api;
 
-namespace Baku.Quma
+namespace Baku.Quma.Low
 {
     /// <summary>
     /// Qumarionのライブラリ初期化、終了および既定デバイス取得といった基本処理を提供します。
@@ -11,7 +11,10 @@ namespace Baku.Quma
     public static class QumarionManager
     {
         /// <summary>ライブラリが初期化されているかどうかを取得します。</summary>
-        public static bool Initialized { get; private set; }
+        public static bool Initialized
+        {
+            get { return QmLow.BaseOperation.Initialized; }
+        }
 
         /// <summary>ライブラリが未初期化の状態で呼び出されると初期化を行います。</summary>
         public static void Initialize()
@@ -19,7 +22,6 @@ namespace Baku.Quma
             if(!Initialized)
             {
                 QmLow.BaseOperation.Initialize();
-                Initialized = true;
             }
         }
 
@@ -97,13 +99,12 @@ namespace Baku.Quma
             return QmLow.BaseOperation.GetVersion();
         }
 
-        /// <summary>ライブラリが初期化済みの状態で呼び出されると終了処理を行います。</summary>
+        /// <summary>ライブラリが初期化済みの状態で呼び出された場合、終了処理を行います。</summary>
         public static void Exit()
         {
             if(Initialized)
             {
                 QmLow.BaseOperation.Exit();
-                Initialized = false;
             }
         }
 

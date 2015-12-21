@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using Baku.Quma.Low.Api;
 using Baku.Quma.Low;
-using Baku.Quma;
 
 namespace TestQumarionDotNet
 {
@@ -11,13 +11,14 @@ namespace TestQumarionDotNet
     public class LowBaseOperation
     {
         [TestMethod]
-        public void Low_初期化と終了()
+        public void Low_初期化()
         {
             var res = QmLow.BaseOperation.Initialize();
             Assert.IsTrue(res == QumaLowResponse.OK);
 
-            res = QmLow.BaseOperation.Exit();
-            Assert.IsTrue(res == QumaLowResponse.OK);
+            //終了テストは廃止: テストのラスト以外でExit関数を呼ぶとなんかリークしてそうなリスクがあるので
+            //res = QmLow.BaseOperation.Exit();
+            //Assert.IsTrue(res == QumaLowResponse.OK);
         }
 
         [TestMethod]

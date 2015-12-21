@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Baku.Quma
+namespace Baku.Quma.Low
 {
     /// <summary>Qumaのデバイスハンドルを表します。</summary>
     public sealed class QumaHandle

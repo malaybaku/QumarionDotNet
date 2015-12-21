@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Baku.Quma
+namespace Baku.Quma.Low
 {
 
     /// <summary>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Baku.Quma
+namespace Baku.Quma.Low
 {
     /// <summary>
     /// <para>QumarionDeviceの計算で得た一般的なボーン構造に対し、</para> 

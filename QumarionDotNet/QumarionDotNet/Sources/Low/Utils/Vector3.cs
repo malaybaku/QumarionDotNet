@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Baku.Quma
+namespace Baku.Quma.Low
 {
     /// <summary>3次元のベクトルを表します。</summary>
     public struct Vector3

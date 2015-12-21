@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-using Baku.Quma;
+using Baku.Quma.Low;
 
 namespace QumarionDataViewer
 {

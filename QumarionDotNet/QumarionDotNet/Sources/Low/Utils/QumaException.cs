@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Baku.Quma
+namespace Baku.Quma.Low
 {
     /// <summary>QumaのAPI呼び出しが失敗した場合にスローされる例外です。</summary>
     public sealed class QumaException : Exception

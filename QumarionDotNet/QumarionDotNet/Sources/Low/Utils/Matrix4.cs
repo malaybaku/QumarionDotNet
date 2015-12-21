@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Baku.Quma
+namespace Baku.Quma.Low
 {
     /// <summary>
     /// <para>姿勢表現に対応する4次正方行列を表します。</para>

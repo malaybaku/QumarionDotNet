@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using Baku.Quma.Low.Api;
 using Baku.Quma.Low;
-using Baku.Quma;
 
 namespace TestQumarionDotNet
 {

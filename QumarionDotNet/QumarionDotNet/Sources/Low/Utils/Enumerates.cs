@@ -1,5 +1,5 @@
 ﻿
-namespace Baku.Quma
+namespace Baku.Quma.Low
 {
     /// <summary>接続してるQumaの種類を表します。</summary>
     public enum QumaTypes

@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
-using System.Reactive.Linq;
+using System.Text;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
+
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using System.Reactive.Linq;
 
-using Baku.Quma;
-using System.Text;
-using System.IO;
-using System.Windows;
-using System.ComponentModel;
+using Baku.Quma.Low;
 
 namespace QumarionDataViewer
 {
@@ -52,10 +53,10 @@ namespace QumarionDataViewer
                     )
                 .Subscribe(OnTimerUdp);
 
-            if (!File.Exists(Baku.Quma.Low.QmLow.DllName))
+            if (!File.Exists(Baku.Quma.Low.Api.QmLow.DllName))
             {
                 MessageBox.Show(
-                    $"Error: Qumarion SDKのDLLファイル({Baku.Quma.Low.QmLow.DllName})が見つかりませんでした。アプリケーションを終了します。",
+                    $"Error: Qumarion SDKのDLLファイル({Baku.Quma.Low.Api.QmLow.DllName})が見つかりませんでした。アプリケーションを終了します。",
                     "QumarionDataViewer - エラー",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error

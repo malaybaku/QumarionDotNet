@@ -1,8 +1,8 @@
 ﻿using System.Runtime.InteropServices;
 
-using Baku.Quma.Low;
+using Baku.Quma.Low.Api;
 
-namespace Baku.Quma
+namespace Baku.Quma.Low
 {
     /// <summary>デバイスの種類とIDを含むデバイス情報を表します。</summary>
     [StructLayout(LayoutKind.Sequential)]

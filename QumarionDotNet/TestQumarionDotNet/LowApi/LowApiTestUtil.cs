@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Linq;
 
-using Baku.Quma;
 using Baku.Quma.Low;
+using Baku.Quma.Low.Api;
 using System.Threading;
 
 namespace TestQumarionDotNet
 {
+    public static class QumaTestContextSetting
+    {
+        /// <summary>実行コンテキストの終了時にExit処理を行うかどうかの設定です。</summary>
+        public readonly static bool ExitEachTimeWhenContextDisposed = false;
+    }
+
     /// <summary>
     /// using文を利用してQumaの実行コンテキストを生成します。
     /// </summary>
@@ -24,7 +30,10 @@ namespace TestQumarionDotNet
 
         public void Dispose()
         {
-            QmLow.BaseOperation.Exit();
+            if(QumaTestContextSetting.ExitEachTimeWhenContextDisposed)
+            {
+                QmLow.BaseOperation.Exit();
+            }
         }
     }
 
@@ -62,7 +71,10 @@ namespace TestQumarionDotNet
 
         public void Dispose()
         {
-            QmLow.BaseOperation.Exit();
+            if (QumaTestContextSetting.ExitEachTimeWhenContextDisposed)
+            {
+                QmLow.BaseOperation.Exit();
+            }
         }
     }
 
@@ -102,7 +114,10 @@ namespace TestQumarionDotNet
 
         public void Dispose()
         {
-            QmLow.BaseOperation.Exit();
+            if (QumaTestContextSetting.ExitEachTimeWhenContextDisposed)
+            {
+                QmLow.BaseOperation.Exit();
+            }
         }
     }
 
@@ -148,7 +163,10 @@ namespace TestQumarionDotNet
 
         public void Dispose()
         {
-            QmLow.BaseOperation.Exit();
+            if(QumaTestContextSetting.ExitEachTimeWhenContextDisposed)
+            {
+                QmLow.BaseOperation.Exit();
+            }
         }
 
     }

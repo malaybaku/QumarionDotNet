@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-using Baku.Quma;
+using Baku.Quma.Low;
 
 namespace ConsoleSample
 {

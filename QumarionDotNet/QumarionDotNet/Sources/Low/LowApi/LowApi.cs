@@ -3,7 +3,7 @@ using System.Text;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace Baku.Quma.Low
+namespace Baku.Quma.Low.Api
 {
     /// <summary>
     /// <para>ネイティブAPIで"QmLow"から始まっているAPI関数のラッパをまとめたクラスです。</para>
@@ -87,7 +87,45 @@ namespace Baku.Quma.Low
             /// <returns>呼び出しに成功した場合OK、失敗した場合はCRYPTLIB_INIT_FAILED</returns>
             [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowInitialize@@YAHXZ")]
             //NOTE:x86, x64で同じ関数名割り当て
-            public static extern QumaLowResponse Initialize();
+            private static extern QumaLowResponse _Initialize();
+
+            private static object _initializedLock = new object();
+            private static bool _initialized = true;
+            public static bool Initialized
+            {
+                get
+                {
+                    lock (_initializedLock)
+                    {
+                        return _initialized;
+                    }
+                }
+                set
+                {
+                    lock(_initializedLock)
+                    {
+                        _initialized = value;
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Quma APIライブラリを初期化します。ライブラリの使用前に必ず呼び出してください。
+            /// この関数は本来のAPIをプロセス中で1度しか呼ばないよう状態管理を行います。
+            /// </summary>
+            /// <returns>起動に成功した場合と2回目以降の呼び出しでは<see cref="QumaLowResponse.OK"/></returns>
+            public static QumaLowResponse Initialize()
+            {
+                if(Initialized)
+                {
+                    Initialized = false;
+                    return _Initialize();
+                }
+                else
+                {
+                    return QumaLowResponse.OK;
+                }
+            }
 
             /// <summary>
             /// デバッグ出力のオン/オフを設定します。

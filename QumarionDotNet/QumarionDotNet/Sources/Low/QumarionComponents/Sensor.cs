@@ -1,6 +1,6 @@
-﻿using Baku.Quma.Low;
+﻿using Baku.Quma.Low.Api;
 
-namespace Baku.Quma
+namespace Baku.Quma.Low
 {
     /// <summary>単一の角度を測定するセンサーを表します。</summary>
     public sealed class Sensor

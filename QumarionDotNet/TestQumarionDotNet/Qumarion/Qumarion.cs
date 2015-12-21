@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Baku.Quma;
+using Baku.Quma.Low;
 
-namespace QumarionCSTest
+namespace TestQumarionDotNet
 {
     [TestClass]
     public class QumarionTest
@@ -23,7 +23,10 @@ namespace QumarionCSTest
             }
             finally
             {
-                QumarionManager.Exit();
+                if(QumaTestContextSetting.ExitEachTimeWhenContextDisposed)
+                {
+                    QumarionManager.Exit();
+                }
             }
         }
 
@@ -40,7 +43,10 @@ namespace QumarionCSTest
             }
             finally
             {
-                QumarionManager.Exit();
+                if (QumaTestContextSetting.ExitEachTimeWhenContextDisposed)
+                {
+                    QumarionManager.Exit();
+                }
             }
         }
 
@@ -56,7 +62,10 @@ namespace QumarionCSTest
             //デバイスが要更新状態でない通常ケースでは失敗
             Assert.AreNotEqual(QumaLowResponse.OK, device.TryUpdateDevice());
 
-            QumarionManager.Exit();
+            if (QumaTestContextSetting.ExitEachTimeWhenContextDisposed)
+            {
+                QumarionManager.Exit();
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 
-using Baku.Quma.Low;
+using Baku.Quma.Low.Api;
 
-namespace Baku.Quma
+namespace Baku.Quma.Low
 {
     /// <summary>デバイスのボーン/センサ構成を特に仮定しない、一般的なQumaのデバイスを表します。</summary>
     public class GeneralizedQumarion

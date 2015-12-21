@@ -90,7 +90,7 @@ namespace Baku.Quma.Low.Api
             private static extern QumaLowResponse _Initialize();
 
             private static object _initializedLock = new object();
-            private static bool _initialized = true;
+            private static bool _initialized = false;
             public static bool Initialized
             {
                 get
@@ -116,9 +116,9 @@ namespace Baku.Quma.Low.Api
             /// <returns>起動に成功した場合と2回目以降の呼び出しでは<see cref="QumaLowResponse.OK"/></returns>
             public static QumaLowResponse Initialize()
             {
-                if(Initialized)
+                if(!Initialized)
                 {
-                    Initialized = false;
+                    Initialized = true;
                     return _Initialize();
                 }
                 else

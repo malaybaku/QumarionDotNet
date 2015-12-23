@@ -5,13 +5,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Baku.Quma.Low;
 
-namespace TestQumarionDotNet
+namespace TestQumarionDotNet.Low
 {
     [TestClass]
     public class QumarionTest
     {
         [TestMethod]
-        public void Qumarion_ボーン列挙()
+        public void LowQumarion_ボーン列挙()
         {
             var device = QumarionManager.GetDefaultDevice();
             try
@@ -31,7 +31,7 @@ namespace TestQumarionDotNet
         }
 
         [TestMethod]
-        public void Qumarion_センサ列挙()
+        public void LowQumarion_センサ列挙()
         {
             var device = QumarionManager.GetDefaultDevice();
             try
@@ -51,7 +51,7 @@ namespace TestQumarionDotNet
         }
 
         [TestMethod]
-        public void Qumarion_アップデート処理()
+        public void LowQumarion_アップデート処理()
         {
             var device = QumarionManager.GetDefaultDevice();
             //アップデートは急に呼び出すと準備未完了で怒られることに注意

@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Baku.Quma.Low;
 using Baku.Quma.Low.Api;
 
-namespace TestQumarionDotNet
+namespace TestQumarionDotNet.Low
 {
 
     /// <summary>
@@ -14,7 +14,7 @@ namespace TestQumarionDotNet
     /// ここではルートボーンを中心に簡単なテストを行います。
     /// </summary>
     [TestClass]
-    public class LowSensor
+    public class LowSensorTest
     {
         static readonly QumaTypes TargetType = QumaTypes.Software;
 

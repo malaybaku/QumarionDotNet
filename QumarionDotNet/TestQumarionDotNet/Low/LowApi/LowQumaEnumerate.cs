@@ -2,11 +2,11 @@
 
 using Baku.Quma.Low.Api;
 
-namespace TestQumarionDotNet
+namespace TestQumarionDotNet.Low
 {
     /// <summary>デバイス取得まわりのテストです。</summary>
     [TestClass]
-    public class LowDevice
+    public class LowDeviceTest
     {
         [TestMethod]
         public void Low_デバイス列挙()

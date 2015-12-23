@@ -11,19 +11,10 @@ namespace Baku.Quma.Low
     public static class QumarionManager
     {
         /// <summary>ライブラリが初期化されているかどうかを取得します。</summary>
-        public static bool Initialized
-        {
-            get { return QmLow.BaseOperation.Initialized; }
-        }
+        public static bool Initialized => QmLow.BaseOperation.Initialized;
 
-        /// <summary>ライブラリが未初期化の状態で呼び出されると初期化を行います。</summary>
-        public static void Initialize()
-        {
-            if(!Initialized)
-            {
-                QmLow.BaseOperation.Initialize();
-            }
-        }
+        /// <summary>ライブラリの初期化を行います。</summary>
+        public static void Initialize() => QmLow.BaseOperation.Initialize();
 
         /// <summary>デバイスのロードに用いる事が可能なID一覧を取得します。</summary>
         /// <returns>デバイスIDの一覧</returns>
@@ -36,9 +27,7 @@ namespace Baku.Quma.Low
         /// <summary>実機と接続状態にあるかどうかを取得します。</summary>
         /// <returns>実機が検出された場合true、されていない場合false</returns>
         public static bool CheckConnectionToHardware()
-        {
-            return GetQumaIds().Any(id => id.QumaType == QumaTypes.HardwareAsai);
-        }
+            => GetQumaIds().Any(id => id.QumaType == QumaTypes.HardwareAsai);
 
         /// <summary>
         /// 実機のQUMARIONかが接続されている場合は最初に見つかった実機を、
@@ -89,9 +78,7 @@ namespace Baku.Quma.Low
         /// <summary>デバイスへの接続を終了します。</summary>
         /// <param name="device">接続終了したいデバイス</param>
         public static void DeleteDevice(GeneralizedQumarion device)
-        {
-            QmLow.Device.DeleteQumaHandle(device.QumaHandle);
-        }
+            => QmLow.Device.DeleteQumaHandle(device.QumaHandle);
 
         public static string GetLibraryVersion()
         {

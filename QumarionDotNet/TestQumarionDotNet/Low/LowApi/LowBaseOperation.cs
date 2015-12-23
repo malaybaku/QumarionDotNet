@@ -3,12 +3,12 @@
 using Baku.Quma.Low.Api;
 using Baku.Quma.Low;
 
-namespace TestQumarionDotNet
+namespace TestQumarionDotNet.Low
 {
 
     /// <summary>ベース処理のうちデバイスの取得が不要なものをテストします。</summary>
     [TestClass]
-    public class LowBaseOperation
+    public class LowBaseOperationTest
     {
         [TestMethod]
         public void Low_初期化()

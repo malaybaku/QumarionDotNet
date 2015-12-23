@@ -53,10 +53,12 @@ namespace QumarionDataViewer
                     )
                 .Subscribe(OnTimerUdp);
 
-            if (!File.Exists(Baku.Quma.Low.Api.QmLow.DllName))
+            if (!File.Exists(Baku.Quma.DllImportSetting.DllName64) ||
+                !File.Exists(Baku.Quma.DllImportSetting.DllName86)
+                )
             {
                 MessageBox.Show(
-                    $"Error: Qumarion SDKのDLLファイル({Baku.Quma.Low.Api.QmLow.DllName})が見つかりませんでした。アプリケーションを終了します。",
+                    $"Error: Qumarion SDKのDLLファイル('{Baku.Quma.DllImportSetting.DllName64}', '{Baku.Quma.DllImportSetting.DllName86}')が見つかりませんでした。アプリケーションを終了します。",
                     "QumarionDataViewer - エラー",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error

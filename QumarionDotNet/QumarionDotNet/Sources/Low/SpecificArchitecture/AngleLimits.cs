@@ -26,7 +26,7 @@ namespace Baku.Quma.Low
         }
 
         #region 下限の一覧
-        private static IReadOnlyDictionary<Sensors, float> LowerLimits =
+        private static ReadOnlyDictionary<Sensors, float> LowerLimits = new ReadOnlyDictionary<Sensors, float>( 
             new Dictionary<Sensors, float>()
             {
                 { Sensors.WaistV_MY, -45.0f },
@@ -67,11 +67,11 @@ namespace Baku.Quma.Low
                 { Sensors.R_Elbow_MY, -30.0f },
                 { Sensors.R_Hand_MX, -150.0f },
                 { Sensors.R_Hand_MZ, -90.0f }
-            };
+            });
         #endregion
 
         #region 下限の一覧
-        private static IReadOnlyDictionary<Sensors, float> UpperLimits =
+        private static ReadOnlyDictionary<Sensors, float> UpperLimits = new ReadOnlyDictionary<Sensors, float>(
             new Dictionary<Sensors, float>()
             {
                 { Sensors.WaistV_MY, 45.0f },
@@ -112,7 +112,7 @@ namespace Baku.Quma.Low
                 { Sensors.R_Elbow_MY, 150.0f },
                 { Sensors.R_Hand_MX, 150.0f },
                 { Sensors.R_Hand_MZ, 90.0f }
-            };
+            });
         #endregion
 
     }

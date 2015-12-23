@@ -3,13 +3,13 @@
 using Baku.Quma.Low;
 using Baku.Quma.Low.Api;
 
-namespace TestQumarionDotNet
+namespace TestQumarionDotNet.Low
 {
     /// <summary>
     /// 状態更新の関数をテストします。
     /// </summary>
     [TestClass]
-    public class LowUpdate
+    public class LowUpdateTest
     {
         static readonly QumaTypes TargetType = QumaTypes.Software;
 
@@ -32,7 +32,7 @@ namespace TestQumarionDotNet
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QumaException))]
+        [ExpectedException(typeof(QmLowException))]
         public void Low_デバイス更新1_正常系で例外投げ()
         {
             using (var context = QumaActiveDeviceContext.Create(TargetType))

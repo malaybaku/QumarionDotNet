@@ -3,13 +3,13 @@
 using Baku.Quma.Low;
 using Baku.Quma.Low.Api;
 
-namespace TestQumarionDotNet
+namespace TestQumarionDotNet.Low
 {
     /// <summary>
     /// ボタンの状態チェック関数をテストします。
     /// </summary>
     [TestClass]
-    public class LowButton
+    public class LowButtonTest
     {
         [TestMethod]
         public void Low_ボタン状態確認1()

@@ -2,13 +2,13 @@
 
 using Baku.Quma.Low;
 
-namespace TestQumarionDotNet
+namespace TestQumarionDotNet.Low
 {
     [TestClass]
     public class QumarionManagerTest
     {
         [TestMethod]
-        public void QManager_初期化()
+        public void LowQManager_初期化()
         {
             QumarionManager.Initialize();
             Assert.IsTrue(QumarionManager.Initialized);
@@ -19,7 +19,7 @@ namespace TestQumarionDotNet
         }
 
         [TestMethod]
-        public void QManager_デバイス取得()
+        public void LowQManager_デバイス取得()
         {
             bool hardwareExists = QumarionManager.CheckConnectionToHardware();
             var device = QumarionManager.GetDefaultDevice();
@@ -34,7 +34,7 @@ namespace TestQumarionDotNet
         }
 
         [TestMethod]
-        public void QManager_バージョン確認()
+        public void LowQManager_バージョン確認()
         {
             QumarionManager.Initialize();
             QumarionManager.GetLibraryVersion();

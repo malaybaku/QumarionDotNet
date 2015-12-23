@@ -4,10 +4,10 @@ using Baku.Quma.Low.Api;
 using Baku.Quma.Low;
 using System;
 
-namespace TestQumarionDotNet
+namespace TestQumarionDotNet.Low
 {
     [TestClass]
-    public class LowBaseOperationWithDevice
+    public class LowBaseOperationWithDeviceTest
     {
         private static readonly QumaTypes TargetType = QumaTypes.Software;
 
@@ -32,7 +32,7 @@ namespace TestQumarionDotNet
         //NOTE: APIの仕様上シミュレータQumaだとSetTimeoutがエラー、ハードウェアだと通る
         //ので、このテストでは関数のラッピングに成功してる事自体を確認している
         [TestMethod]
-        [ExpectedException(typeof(QumaException))]
+        [ExpectedException(typeof(QmLowException))]
         public void Low_タイムアウト設定および設定解除_異常系()
         {
             using (var context = QumaActiveDeviceContext.Create(QumaTypes.Software))

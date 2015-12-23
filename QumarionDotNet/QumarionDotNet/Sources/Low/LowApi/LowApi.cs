@@ -12,14 +12,9 @@ namespace Baku.Quma.Low.Api
     /// </summary>
     public static class QmLow
     {
-        //NOTE: 理由がよく分からないがdebugのQmPdkDll.dllは呼べないらしい？
-#if !T_X64
-        public const string DllName = @"dll\release\x86\QmPdkDll.dll";
-        //public const string DllName = @"dll\debug\x86\QmPdkDll.dll";
-#else
-        public const string DllName = @"dll\release\x64\QmPdkDll.dll";
-        //public const string DllName = @"dll\debug\x64\QmPdkDll.dll";
-#endif
+        private const string DllName86 = DllImportSetting.DllName86;
+        private const string DllName64 = DllImportSetting.DllName64;
+        private static readonly bool Is64bit = DllImportSetting.Is64bit;
 
         /// <summary>APIで使われている定数</summary>
         public static class ApiConstants
@@ -49,48 +44,112 @@ namespace Baku.Quma.Low.Api
         {
             #region privateなDllImport
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetVersion@@YAXPA_W@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetVersion@@YAXPEA_W@Z")]
-#endif
-            private static extern void GetVersion([MarshalAs(UnmanagedType.LPWStr, SizeConst = ApiConstants.API_VERSION_STR_MAX_LENGTH)]StringBuilder res);
+            #region _Initialize
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowInitialize@@YAHXZ")]
+            private static extern QumaLowResponse _Initialize86();
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowInitialize@@YAHXZ")]
+            private static extern QumaLowResponse _Initialize64();
+            private static QumaLowResponse _Initialize() => Is64bit ? _Initialize64() : _Initialize86();
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetDeviceID@@YAXPAXPAE@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetDeviceID@@YAXPEAXPEAE@Z")]
-#endif
-            private static extern void GetDeviceID(IntPtr qumaHandle, IntPtr result);
+            #region GetVersion
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetVersion@@YAXPA_W@Z")]
+            private static extern void GetVersion86([MarshalAs(UnmanagedType.LPWStr, SizeConst = ApiConstants.API_VERSION_STR_MAX_LENGTH)]StringBuilder res);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetVersion@@YAXPEA_W@Z")]
+            private static extern void GetVersion64([MarshalAs(UnmanagedType.LPWStr, SizeConst = ApiConstants.API_VERSION_STR_MAX_LENGTH)]StringBuilder res);
+            private static void GetVersion(StringBuilder res)
+            {
+                if (Is64bit)
+                {
+                    GetVersion64(res);
+                } else
+                {
+                    GetVersion86(res);
+                }
+            }
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetDeviceName@@YAXPAXPA_W@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetDeviceName@@YAXPEAXPEA_W@Z")]
-#endif
-            private static extern void GetDeviceName(IntPtr qumaHandle, [MarshalAs(UnmanagedType.LPWStr, SizeConst = ApiConstants.QUMAHANDLE_NAME_SIZE)]StringBuilder result);
+            #region GetDeviceID
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetDeviceID@@YAXPAXPAE@Z")]
+            private static extern void GetDeviceID86(IntPtr qumaHandle, IntPtr result);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetDeviceID@@YAXPEAXPEAE@Z")]
+            private static extern void GetDeviceID64(IntPtr qumaHandle, IntPtr result);
+            private static void GetDeviceID(IntPtr qumaHandle, IntPtr result)
+            {
+                if(Is64bit)
+                {
+                    GetDeviceID64(qumaHandle, result);
+                }
+                else
+                {
+                    GetDeviceID86(qumaHandle, result);
+                }
+            }
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowSetTimeout@@YAHPAXI@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowSetTimeout@@YAHPEAXI@Z")]
-#endif
-            private static extern QumaLowResponse SetTimeout(IntPtr qumaHandle, uint timeout);
+            #region GetDeviceName
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetDeviceName@@YAXPAXPA_W@Z")]
+            private static extern void GetDeviceName86(IntPtr qumaHandle, [MarshalAs(UnmanagedType.LPWStr, SizeConst = ApiConstants.QUMAHANDLE_NAME_SIZE)]StringBuilder result);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetDeviceName@@YAXPEAXPEA_W@Z")]
+            private static extern void GetDeviceName64(IntPtr qumaHandle, [MarshalAs(UnmanagedType.LPWStr, SizeConst = ApiConstants.QUMAHANDLE_NAME_SIZE)]StringBuilder result);
+            private static void GetDeviceName(IntPtr qumaHandle, StringBuilder result)
+            {
+                if (Is64bit)
+                {
+                    GetDeviceName64(qumaHandle, result);
+                }
+                else
+                {
+                    GetDeviceName86(qumaHandle, result);
+                }
+            }
+            #endregion
+
+            #region SetTimeout
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowSetTimeout@@YAHPAXI@Z")]
+            private static extern QumaLowResponse SetTimeout86(IntPtr qumaHandle, uint timeout);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowSetTimeout@@YAHPEAXI@Z")]
+            private static extern QumaLowResponse SetTimeout64(IntPtr qumaHandle, uint timeout);
+            private static QumaLowResponse SetTimeout(IntPtr qumaHandle, uint timeout)
+                => Is64bit ? SetTimeout64(qumaHandle, timeout) : SetTimeout86(qumaHandle, timeout);
+            #endregion
+
+            #region SetDebugWrite
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowSetDebugWrite@@YAX_N@Z")]
+            private static extern void SetDebugWrite86(bool isEnable);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowSetDebugWrite@@YAX_N@Z")]
+            private static extern void SetDebugWrite64(bool isEnable);
+            #endregion
+
+            #region SetCoordinateSystem
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowSetCoordinateSystem@@YAXW4QMLOW_COORDINATE_SYSTEM@@@Z")]
+            private static extern void SetCoordinateSystem86(CoordinateSystem coordinateSystem);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowSetCoordinateSystem@@YAXW4QMLOW_COORDINATE_SYSTEM@@@Z")]
+            private static extern void SetCoordinateSystem64(CoordinateSystem coordinateSystem);
+            #endregion
+
+            #region SetRotateDirection
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowSetRotateDirection@@YAXW4QMLOW_ROTATE_DIRECTION@@@Z")]
+            private static extern void SetRotateDirection86(RotateDirection direction);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowSetRotateDirection@@YAXW4QMLOW_ROTATE_DIRECTION@@@Z")]
+            private static extern void SetRotateDirection64(RotateDirection direction);
+            #endregion
+
+            #region Exit
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowExit@@YAHXZ")]
+            private static extern QumaLowResponse Exit86();
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowExit@@YAHXZ")]
+            private static extern QumaLowResponse Exit64();
+            #endregion
+
 
             #endregion
 
-            #region publicなDllImport
-
-            /// <summary>
-            /// Quma API ライブラリを初期化します.Quma API ライブラリを使用する前に必ず呼び出してください.
-            /// </summary>
-            /// <returns>呼び出しに成功した場合OK、失敗した場合はCRYPTLIB_INIT_FAILED</returns>
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowInitialize@@YAHXZ")]
-            //NOTE:x86, x64で同じ関数名割り当て
-            private static extern QumaLowResponse _Initialize();
+            #region publicなラップ済関数
 
             private static object _initializedLock = new object();
             private static bool _initialized = false;
+            /// <summary><see cref="Initialize"/>関数が一度以上呼ばれているかどうかを取得します。このプロパティはスレッドセーフです。</summary>
             public static bool Initialized
             {
                 get
@@ -102,7 +161,7 @@ namespace Baku.Quma.Low.Api
                 }
                 set
                 {
-                    lock(_initializedLock)
+                    lock (_initializedLock)
                     {
                         _initialized = value;
                     }
@@ -116,7 +175,7 @@ namespace Baku.Quma.Low.Api
             /// <returns>起動に成功した場合と2回目以降の呼び出しでは<see cref="QumaLowResponse.OK"/></returns>
             public static QumaLowResponse Initialize()
             {
-                if(!Initialized)
+                if (!Initialized)
                 {
                     Initialized = true;
                     return _Initialize();
@@ -127,37 +186,9 @@ namespace Baku.Quma.Low.Api
                 }
             }
 
-            /// <summary>
-            /// デバッグ出力のオン/オフを設定します。
-            /// </summary>
-            /// <param name="isEnable">デバッグ出力を行う場合true</param>
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowSetDebugWrite@@YAX_N@Z")]
-            //NOTE:x86, x64で同じ関数名割り当て
-            public static extern void SetDebugWrite(bool isEnable);
-
-            /// <summary>ライブラリ内で使う座標系を設定します。</summary>
-            /// <param name="coordinateSystem">座標系。デフォルトでは左手系が使用されます。</param>
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowSetCoordinateSystem@@YAXW4QMLOW_COORDINATE_SYSTEM@@@Z")]
-            //NOTE: x86, x64で同じ関数名割り当て
-            public static extern void SetCoordinateSystem(CoordinateSystem coordinateSystem);
-
-            /// <summary>
-            /// 回転正方向を設定します。
-            /// </summary>
-            /// <param name="direction">回転方向。デフォルトでは右回転が正です。</param>
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowSetRotateDirection@@YAXW4QMLOW_ROTATE_DIRECTION@@@Z")]
-            //NOTE: x86, x64で同じ関数名割り当て
-            public static extern void SetRotateDirection(RotateDirection direction);
-
-            /// <summary>APIを終了します。ライブラリが使い終わったら呼び出してください。</summary>
+            /// <summary>APIを終了します。ライブラリを使い終わったら呼び出してください。</summary>
             /// <returns>終了に成功するとOKを返します。</returns>
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowExit@@YAHXZ")]
-            //NOTE: x86, x64で同じ関数名割り当て
-            public static extern QumaLowResponse Exit();
-
-            #endregion
-
-            #region publicなラッパー関数
+            public static QumaLowResponse Exit() => Is64bit ? Exit64() : Exit86();
 
             /// <summary>
             /// Quma Driverのバージョン情報を取得します。
@@ -176,13 +207,7 @@ namespace Baku.Quma.Low.Api
             public static byte[] GetDeviceID(QumaHandle qumaHandle)
             {
                 var result = new byte[ApiConstants.DEVICE_ID_LENGTH];
-#if DEBUG
-                //上書き処理が正しく行われてるかチェックするため非ゼロ値を入れてみる
-                for (int i = 0; i < result.Length; i++)
-                {
-                    result[i] = (byte)i;
-                }
-#endif
+
                 var resultPtr = Marshal.AllocHGlobal(sizeof(byte) * ApiConstants.DEVICE_ID_LENGTH);
                 GetDeviceID(qumaHandle.Handle, resultPtr);
 
@@ -203,6 +228,50 @@ namespace Baku.Quma.Low.Api
             }
 
             /// <summary>
+            /// デバッグ出力のオン/オフを設定します。
+            /// </summary>
+            /// <param name="isEnable">デバッグ出力を行う場合true</param>
+            public static void SetDebugWrite(bool isEnable)
+            {
+                if (Is64bit)
+                {
+                    SetDebugWrite64(isEnable);
+                }
+                else
+                {
+                    SetDebugWrite86(isEnable);
+                }
+            }
+
+            /// <summary>ライブラリ内で使う座標系を設定します。</summary>
+            /// <param name="coordinateSystem">座標系。デフォルトでは左手系が使用されます。</param>
+            public static void SetCoordinateSystem(CoordinateSystem coordinateSystem)
+            {
+                if (Is64bit)
+                {
+                    SetCoordinateSystem64(coordinateSystem);
+                }
+                else
+                {
+                    SetCoordinateSystem86(coordinateSystem);
+                }
+            }
+
+            /// <summary>回転正方向を設定します。</summary>
+            /// <param name="direction">回転方向。デフォルトでは右回転が正です。</param>
+            public static void SetRotateDirection(RotateDirection direction)
+            {
+                if (Is64bit)
+                {
+                    SetRotateDirection64(direction);
+                }
+                else
+                {
+                    SetRotateDirection86(direction);
+                }
+            }
+
+            /// <summary>
             /// <para>ミリ秒単位でタイムアウトを設定します。デフォルトではタイムアウトは無効化されています。</para>
             /// <para>API仕様上引数に0, 0x7fffffff, 0xffffffffのいずれかを指定すると例外が発生します。</para>
             /// <para>タイムアウトを無効化する場合<see cref="DisableTimeout(QumaHandle)"/>を用いてください。</para> 
@@ -211,7 +280,7 @@ namespace Baku.Quma.Low.Api
             /// <param name="timeout">指定する秒数(ミリ秒単位)</param>
             /// <returns>設定に成功: OK</returns>
             /// <exception cref="ArgumentException" />
-            /// <exception cref="QumaException" />
+            /// <exception cref="QmLowException" />
             public static void SetTimeout(QumaHandle qumaHandle, uint timeout)
             {
                 if(timeout == ApiConstants.TIMEOUT_DISABLE_0 ||
@@ -224,20 +293,20 @@ namespace Baku.Quma.Low.Api
                 var res = SetTimeout(qumaHandle.Handle, timeout);
                 if (res != QumaLowResponse.OK)
                 {
-                    throw new QumaException(res);
+                    throw new QmLowException(res);
                 }
             }
 
             /// <summary>タイムアウトを無効化します。</summary>
             /// <param name="qumaHandle">Qumaデバイスのハンドル</param>
             /// <returns>設定に成功: OK</returns>
-            /// <exception cref="QumaException">関数呼び出しに失敗した場合に発生します。</exception>
+            /// <exception cref="QmLowException">関数呼び出しに失敗した場合に発生します。</exception>
             public static void DisableTimeout(QumaHandle qumaHandle)
             {
                 var res = SetTimeout(qumaHandle.Handle, ApiConstants.TIMEOUT_DISABLE_0);
                 if (res != QumaLowResponse.OK)
                 {
-                    throw new QumaException(res);
+                    throw new QmLowException(res);
                 }
             }
 
@@ -249,39 +318,43 @@ namespace Baku.Quma.Low.Api
         {
             #region privateなDllImport
 
-            //NOTE: 配列型を使うのが正道だけどかったるいのでマーシャリング前提のコードにしとく
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowEnumlateQumaIDs@@YAHPAUt_QmLowQumaID@@PAH@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowEnumlateQumaIDs@@YAHPEAUt_QmLowQumaID@@PEAH@Z")]
-#endif
-            private static extern QumaLowResponse EnumlateQumaIDs(IntPtr arrayHeadPtr, ref int outIdCount);
+            #region EnumerateQumaIDs
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowEnumlateQumaIDs@@YAHPAUt_QmLowQumaID@@PAH@Z")]
+            private static extern QumaLowResponse EnumlateQumaIDs86(IntPtr arrayHeadPtr, ref int outIdCount);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowEnumlateQumaIDs@@YAHPEAUt_QmLowQumaID@@PEAH@Z")]
+            private static extern QumaLowResponse EnumlateQumaIDs64(IntPtr arrayHeadPtr, ref int outIdCount);
+            private static QumaLowResponse EnumlateQumaIDs(IntPtr arrayHeadPtr, ref int outIdCount)
+                => Is64bit ? EnumlateQumaIDs64(arrayHeadPtr, ref outIdCount) : EnumlateQumaIDs86(arrayHeadPtr, ref outIdCount);
+            #endregion
 
-            /// <summary>IDを指定してQumaのハンドルを取得します。</summary>
-            /// <param name="qumaId"></param>
-            /// <param name="resultHandle"></param>
-            /// <returns></returns>
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetQumaHandle@@YAHUt_QmLowQumaID@@PAPAX@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetQumaHandle@@YAHUt_QmLowQumaID@@PEAPEAX@Z")]
-#endif
-            private static extern QumaLowResponse GetQumaHandle(QumaId qumaId, ref IntPtr resultHandle);
+            #region GetQumaHandle
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetQumaHandle@@YAHUt_QmLowQumaID@@PAPAX@Z")]
+            private static extern QumaLowResponse GetQumaHandle86(QumaId qumaId, ref IntPtr resultHandle);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetQumaHandle@@YAHUt_QmLowQumaID@@PEAPEAX@Z")]
+            private static extern QumaLowResponse GetQumaHandle64(QumaId qumaId, ref IntPtr resultHandle);
+            private static QumaLowResponse GetQumaHandle(QumaId qumaId, ref IntPtr resultHandle)
+                => Is64bit ? GetQumaHandle64(qumaId, ref resultHandle) : GetQumaHandle86(qumaId, ref resultHandle);
+            #endregion
 
-            //NOTE: 第二引数は普通NULLで良いらしいので元の定義は隠す
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowActivateQuma@@YAHPAXPAUt_QmLowActivateInfo@@@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowActivateQuma@@YAHPEAXPEAUt_QmLowActivateInfo@@@Z")]
-#endif
-            private static extern QumaLowResponse ActivateQuma(IntPtr qumaHandle, IntPtr activeInfo);
+            //NOTE: 元のC/C++ヘッダによると、コイツの第二引数は普通NULLで良いらしい
+            #region ActivateQuma
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowActivateQuma@@YAHPAXPAUt_QmLowActivateInfo@@@Z")]
+            private static extern QumaLowResponse ActivateQuma86(IntPtr qumaHandle, IntPtr activeInfo);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowActivateQuma@@YAHPEAXPEAUt_QmLowActivateInfo@@@Z")]
+            private static extern QumaLowResponse ActivateQuma64(IntPtr qumaHandle, IntPtr activeInfo);
+            private static QumaLowResponse ActivateQuma(IntPtr qumaHandle, IntPtr activeInfo)
+                => Is64bit ? ActivateQuma64(qumaHandle, activeInfo) : ActivateQuma86(qumaHandle, activeInfo);
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowDeleteQumaHandle@@YAHPAX@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowDeleteQumaHandle@@YAHPEAX@Z")]
-#endif
-            private static extern QumaLowResponse DeleteQumaHandle(IntPtr qumaHandle);
+            #region DeleteQumaHandle
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowDeleteQumaHandle@@YAHPAX@Z")]
+            private static extern QumaLowResponse DeleteQumaHandle86(IntPtr qumaHandle);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowDeleteQumaHandle@@YAHPEAX@Z")]
+            private static extern QumaLowResponse DeleteQumaHandle64(IntPtr qumaHandle);
+            private static QumaLowResponse DeleteQumaHandle(IntPtr qumaHandle)
+                => Is64bit ? DeleteQumaHandle64(qumaHandle) : DeleteQumaHandle86(qumaHandle);
+
+            #endregion
 
             #endregion
 
@@ -313,7 +386,7 @@ namespace Baku.Quma.Low.Api
                 else
                 {
                     Marshal.FreeHGlobal(qumaIdsPtr);
-                    throw new QumaException(res);
+                    throw new QmLowException(res);
                 }
             }
 
@@ -322,14 +395,14 @@ namespace Baku.Quma.Low.Api
             /// </summary>
             /// <param name="qumaId">ハンドルを取得するためのID</param>
             /// <returns>デバイスハンドル</returns>
-            /// <exception cref="QumaException">ハンドルの取得に失敗した場合に発生します。</exception>
+            /// <exception cref="QmLowException">ハンドルの取得に失敗した場合に発生します。</exception>
             public static QumaHandle GetQumaHandle(QumaId qumaId)
             {
                 IntPtr handle = IntPtr.Zero;
                 var response = GetQumaHandle(qumaId, ref handle);
                 if (response != QumaLowResponse.OK)
                 {
-                    throw new QumaException(response);
+                    throw new QmLowException(response);
                 }
                 return new QumaHandle(handle);
             }
@@ -342,7 +415,7 @@ namespace Baku.Quma.Low.Api
                 var res = ActivateQuma(qumaHandle.Handle, IntPtr.Zero);
                 if (res != QumaLowResponse.OK)
                 {
-                    throw new QumaException(res);
+                    throw new QmLowException(res);
                 }
             }
 
@@ -358,7 +431,7 @@ namespace Baku.Quma.Low.Api
                 var res = DeleteQumaHandle(qumaHandle.Handle);
                 if(res != QumaLowResponse.OK)
                 {
-                    throw new QumaException(res);
+                    throw new QmLowException(res);
                 }
             }
 
@@ -370,54 +443,87 @@ namespace Baku.Quma.Low.Api
         {
             #region privateなDllImport
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetRootBone@@YAPAXPAX@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetRootBone@@YAPEAXPEAX@Z")]
-#endif
-            private static extern IntPtr GetRootBone(IntPtr qumaHandle);
+            #region GetRootBone
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetRootBone@@YAPAXPAX@Z")]
+            private static extern IntPtr GetRootBone86(IntPtr qumaHandle);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetRootBone@@YAPEAXPEAX@Z")]
+            private static extern IntPtr GetRootBone64(IntPtr qumaHandle);
+            private static IntPtr GetRootBone(IntPtr qumaHandle)
+                => Is64bit ? GetRootBone64(qumaHandle) : GetRootBone86(qumaHandle);
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBoneByName@@YAPAXPAXPB_W@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBoneByName@@YAPEAXPEAXPEB_W@Z")]
-#endif
-            private static extern IntPtr GetBoneByName(IntPtr rootBone, [MarshalAs(UnmanagedType.LPWStr)]string name);
+            #region GetBoneByName
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBoneByName@@YAPAXPAXPB_W@Z")]
+            private static extern IntPtr GetBoneByName86(IntPtr rootBone, [MarshalAs(UnmanagedType.LPWStr)]string name);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBoneByName@@YAPEAXPEAXPEB_W@Z")]
+            private static extern IntPtr GetBoneByName64(IntPtr rootBone, [MarshalAs(UnmanagedType.LPWStr)]string name);
+            private static IntPtr GetBoneByName(IntPtr rootBone, string name)
+                => Is64bit ? GetBoneByName64(rootBone, name) : GetBoneByName86(rootBone, name);
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBoneName@@YAXPAXPA_W@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBoneName@@YAXPEAXPEA_W@Z")]
-#endif
-            private static extern void GetBoneName(IntPtr bone, [MarshalAs(UnmanagedType.LPWStr, SizeConst = ApiConstants.QUMABONE_NAME_NAX_SIZE)]StringBuilder result);
+            #region GetBoneName
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBoneName@@YAXPAXPA_W@Z")]
+            private static extern void GetBoneName86(IntPtr bone, [MarshalAs(UnmanagedType.LPWStr, SizeConst = ApiConstants.QUMABONE_NAME_NAX_SIZE)]StringBuilder result);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBoneName@@YAXPEAXPEA_W@Z")]
+            private static extern void GetBoneName64(IntPtr bone, [MarshalAs(UnmanagedType.LPWStr, SizeConst = ApiConstants.QUMABONE_NAME_NAX_SIZE)]StringBuilder result);
+            private static void GetBoneName(IntPtr bone, StringBuilder result)
+            {
+                if(Is64bit)
+                {
+                    GetBoneName64(bone, result);
+                }
+                else
+                {
+                    GetBoneName86(bone, result);
+                }
+            }
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetChildCount@@YAHPAX@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetChildCount@@YAHPEAX@Z")]
-#endif
-            private static extern int GetChildCount(IntPtr bone);
+            #region GetChildCount
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetChildCount@@YAHPAX@Z")]
+            private static extern int GetChildCount86(IntPtr bone);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetChildCount@@YAHPEAX@Z")]
+            private static extern int GetChildCount64(IntPtr bone);
+            private static int GetChildCount(IntPtr bone)
+                 => Is64bit ? GetChildCount64(bone) : GetChildCount86(bone);
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetChildBone@@YAPAXPAXH@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetChildBone@@YAPEAXPEAXH@Z")]
-#endif
-            private static extern IntPtr GetChildBone(IntPtr bone, int index);
+            #region GetChildBone
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetChildBone@@YAPAXPAXH@Z")]
+            private static extern IntPtr GetChildBone86(IntPtr bone, int index);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetChildBone@@YAPEAXPEAXH@Z")]
+            private static extern IntPtr GetChildBone64(IntPtr bone, int index);
+            private static IntPtr GetChildBone(IntPtr bone, int index)
+                => Is64bit ? GetChildBone64(bone, index) : GetChildBone86(bone, index);
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBonePosition@@YAXPAXPAM@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBonePosition@@YAXPEAXPEAM@Z")]
-#endif
-            private static extern void GetBonePosition(IntPtr boneHandle, IntPtr result);
+            #region GetBonePosition
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBonePosition@@YAXPAXPAM@Z")]
+            private static extern void GetBonePosition86(IntPtr boneHandle, IntPtr result);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBonePosition@@YAXPEAXPEAM@Z")]
+            private static extern void GetBonePosition64(IntPtr boneHandle, IntPtr result);
+            private static void GetBonePosition(IntPtr boneHandle, IntPtr result)
+            {
+                if(Is64bit)
+                {
+                    GetBonePosition64(boneHandle, result);
+                }
+                else
+                {
+                    GetBonePosition86(boneHandle, result);
+                }
+            }
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowComputeBoneMatrix@@YAHPAX0PAM@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowComputeBoneMatrix@@YAHPEAX0PEAM@Z")]
-#endif
-            private static extern QumaLowResponse ComputeBoneMatrix(IntPtr qumaHandle, IntPtr bone, IntPtr result);
+            #endregion
+
+            #region ComputeBoneMatrix
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowComputeBoneMatrix@@YAHPAX0PAM@Z")]
+            private static extern QumaLowResponse ComputeBoneMatrix86(IntPtr qumaHandle, IntPtr bone, IntPtr result);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowComputeBoneMatrix@@YAHPEAX0PEAM@Z")]
+            private static extern QumaLowResponse ComputeBoneMatrix64(IntPtr qumaHandle, IntPtr bone, IntPtr result);
+            private static QumaLowResponse ComputeBoneMatrix(IntPtr qumaHandle, IntPtr bone, IntPtr result)
+                => Is64bit ? ComputeBoneMatrix64(qumaHandle, bone, result) : ComputeBoneMatrix86(qumaHandle, bone, result);
+            #endregion
 
             #endregion
 
@@ -562,7 +668,7 @@ namespace Baku.Quma.Low.Api
                 else
                 {
                     Marshal.FreeHGlobal(matrixPtr);
-                    throw new QumaException(response);
+                    throw new QmLowException(response);
                 }
             }
 
@@ -574,54 +680,76 @@ namespace Baku.Quma.Low.Api
         {
             #region privateなDllImport
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetSensorCount@@YAHPAX@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetSensorCount@@YAHPEAX@Z")]
-#endif
-            private static extern int GetSensorCount(IntPtr bone);
-  
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetSensor@@YAPAXPAXH@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetSensor@@YAPEAXPEAXH@Z")]
-#endif
-            private static extern IntPtr GetSensor(IntPtr bone, int index);
+            #region GetSensorCount
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetSensorCount@@YAHPAX@Z")]
+            private static extern int GetSensorCount86(IntPtr bone);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetSensorCount@@YAHPEAX@Z")]
+            private static extern int GetSensorCount64(IntPtr bone);
+            private static int GetSensorCount(IntPtr bone)
+                => Is64bit ? GetSensorCount64(bone) : GetSensorCount86(bone);
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetSensorAxis@@YAXPAXPAM@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetSensorAxis@@YAXPEAXPEAM@Z")]
-#endif
-            private static extern void GetSensorAxis(IntPtr sensor, IntPtr result);
+            #region GetSensor
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetSensor@@YAPAXPAXH@Z")]
+            private static extern IntPtr GetSensor86(IntPtr bone, int index);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetSensor@@YAPEAXPEAXH@Z")]
+            private static extern IntPtr GetSensor64(IntPtr bone, int index);
+            private static IntPtr GetSensor(IntPtr bone, int index) => Is64bit ? GetSensor64(bone, index) : GetSensor86(bone, index);
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetSensorState@@YA?AW4QMLOW_SENSOR_STATE@@PAX0@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetSensorState@@YA?AW4QMLOW_SENSOR_STATE@@PEAX0@Z")]
-#endif
-            private static extern SensorStates GetSensorState(IntPtr qumaHandle, IntPtr sensor);
+            #region GetSensorAxis
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetSensorAxis@@YAXPAXPAM@Z")]
+            private static extern void GetSensorAxis86(IntPtr sensor, IntPtr result);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetSensorAxis@@YAXPEAXPEAM@Z")]
+            private static extern void GetSensorAxis64(IntPtr sensor, IntPtr result);
+            private static void GetSensorAxis(IntPtr sensor, IntPtr result)
+            {
+                if(Is64bit)
+                {
+                    GetSensorAxis64(sensor, result);
+                }
+                else
+                {
+                    GetSensorAxis86(sensor, result);
+                }
+            }
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowComputeSensorAngle@@YAHPAX0PAM@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowComputeSensorAngle@@YAHPEAX0PEAM@Z")]
-#endif
-            private static extern QumaLowResponse ComputeSensorAngle(IntPtr qumaHandle, IntPtr sensor, ref float f);
+            #region GetSensorState
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetSensorState@@YA?AW4QMLOW_SENSOR_STATE@@PAX0@Z")]
+            private static extern SensorStates GetSensorState86(IntPtr qumaHandle, IntPtr sensor);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetSensorState@@YA?AW4QMLOW_SENSOR_STATE@@PEAX0@Z")]
+            private static extern SensorStates GetSensorState64(IntPtr qumaHandle, IntPtr sensor);
+            private static SensorStates GetSensorState(IntPtr qumaHandle, IntPtr sensor)
+                => Is64bit ? GetSensorState64(qumaHandle, sensor) : GetSensorState86(qumaHandle, sensor);
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetAccelerometer@@YAHPAXPAM@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetAccelerometer@@YAHPEAXPEAM@Z")]
-#endif
-            private static extern QumaLowResponse GetAccelerometer(IntPtr qumaHandle, IntPtr result);
+            #region ComputeSensorAngle
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowComputeSensorAngle@@YAHPAX0PAM@Z")]
+            private static extern QumaLowResponse ComputeSensorAngle86(IntPtr qumaHandle, IntPtr sensor, ref float f);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowComputeSensorAngle@@YAHPEAX0PEAM@Z")]
+            private static extern QumaLowResponse ComputeSensorAngle64(IntPtr qumaHandle, IntPtr sensor, ref float f);
+            private static QumaLowResponse ComputeSensorAngle(IntPtr qumaHandle, IntPtr sensor, ref float f)
+                => Is64bit ? ComputeSensorAngle64(qumaHandle, sensor, ref f) : ComputeSensorAngle86(qumaHandle, sensor, ref f);
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetAccelerometerPoseMatrix@@YAHPAXPAM@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetAccelerometerPoseMatrix@@YAHPEAXPEAM@Z")]
-#endif
-            private static extern QumaLowResponse GetAccelerometerPoseMatrix(IntPtr qumaHandle, IntPtr result);
+            #region GetAccelerometer
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetAccelerometer@@YAHPAXPAM@Z")]
+            private static extern QumaLowResponse GetAccelerometer86(IntPtr qumaHandle, IntPtr result);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetAccelerometer@@YAHPEAXPEAM@Z")]
+            private static extern QumaLowResponse GetAccelerometer64(IntPtr qumaHandle, IntPtr result);
+            private static QumaLowResponse GetAccelerometer(IntPtr qumaHandle, IntPtr result)
+                => Is64bit ? GetAccelerometer64(qumaHandle, result) : GetAccelerometer86(qumaHandle, result);
+            #endregion
+
+            #region GetAccelerometerPoseMatrix
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetAccelerometerPoseMatrix@@YAHPAXPAM@Z")]
+            private static extern QumaLowResponse GetAccelerometerPoseMatrix86(IntPtr qumaHandle, IntPtr result);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetAccelerometerPoseMatrix@@YAHPEAXPEAM@Z")]
+            private static extern QumaLowResponse GetAccelerometerPoseMatrix64(IntPtr qumaHandle, IntPtr result);
+            private static QumaLowResponse GetAccelerometerPoseMatrix(IntPtr qumaHandle, IntPtr result)
+                => Is64bit ? GetAccelerometerPoseMatrix64(qumaHandle, result) : GetAccelerometerPoseMatrix86(qumaHandle, result);
+            #endregion
 
             #endregion
 
@@ -701,14 +829,14 @@ namespace Baku.Quma.Low.Api
             /// <param name="qumaHandle">対象のデバイス</param>
             /// <param name="sensorHandle">対象のセンサー</param>
             /// <returns>角度値</returns>
-            /// <exception cref="QumaException">呼び出しが正常な場合以外に発生します。</exception>
+            /// <exception cref="QmLowException">呼び出しが正常な場合以外に発生します。</exception>
             public static float ComputeSensorAngle(QumaHandle qumaHandle, SensorHandle sensorHandle)
             {
                 float result = 0.0f;
                 var response = ComputeSensorAngle(qumaHandle.Handle, sensorHandle.Handle, ref result);
                 if (response != QumaLowResponse.OK)
                 {
-                    throw new QumaException(response);
+                    throw new QmLowException(response);
                 }
                 return result;
             }
@@ -732,7 +860,7 @@ namespace Baku.Quma.Low.Api
             /// </summary>
             /// <param name="qumaHandle">デバイスのハンドル</param>
             /// <returns>加速度計の読み</returns>
-            /// <exception cref="QumaException" />
+            /// <exception cref="QmLowException" />
             public static Vector3 GetAccelerometer(QumaHandle qumaHandle)
             {
                 var vectorPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(float)) * 3);
@@ -749,7 +877,7 @@ namespace Baku.Quma.Low.Api
                 else
                 {
                     Marshal.FreeHGlobal(vectorPtr);
-                    throw new QumaException(response);
+                    throw new QmLowException(response);
                 }
             }
 
@@ -788,7 +916,7 @@ namespace Baku.Quma.Low.Api
             /// </summary>
             /// <param name="qumaHandle">対象のデバイス</param>
             /// <returns>加速度計に関する姿勢行列</returns>
-            /// <exception cref="QumaException" />
+            /// <exception cref="QmLowException" />
             public static Matrix4 GetAccelerometerPoseMatrix(QumaHandle qumaHandle)
             {
                 var matrixPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(float)) * 16);
@@ -805,7 +933,7 @@ namespace Baku.Quma.Low.Api
                 else
                 {
                     Marshal.FreeHGlobal(matrixPtr);
-                    throw new QumaException(response);
+                    throw new QmLowException(response);
                 }
             }
 
@@ -843,19 +971,24 @@ namespace Baku.Quma.Low.Api
         public static class Update
         {
             #region privateなDllImport
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowUpdateBuffer@@YAHPAX@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowUpdateBuffer@@YAHPEAX@Z")]
-#endif
-            private static extern QumaLowResponse UpdateBuffer(IntPtr qumaHandle);
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowUpdateQumaHandle@@YAHPAX@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowUpdateQumaHandle@@YAHPEAX@Z")]
-#endif
-            private static extern QumaLowResponse UpdateQumaHandle(IntPtr qumaHandle);
+            #region UpdateBuffer
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowUpdateBuffer@@YAHPAX@Z")]
+            private static extern QumaLowResponse UpdateBuffer86(IntPtr qumaHandle);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowUpdateBuffer@@YAHPEAX@Z")]
+            private static extern QumaLowResponse UpdateBuffer64(IntPtr qumaHandle);
+            private static QumaLowResponse UpdateBuffer(IntPtr qumaHandle)
+                => Is64bit ? UpdateBuffer64(qumaHandle) : UpdateBuffer86(qumaHandle);
+            #endregion
+
+            #region UpdateQumaHandle
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowUpdateQumaHandle@@YAHPAX@Z")]
+            private static extern QumaLowResponse UpdateQumaHandle86(IntPtr qumaHandle);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowUpdateQumaHandle@@YAHPEAX@Z")]
+            private static extern QumaLowResponse UpdateQumaHandle64(IntPtr qumaHandle);
+            private static QumaLowResponse UpdateQumaHandle(IntPtr qumaHandle)
+                => Is64bit ? UpdateQumaHandle64(qumaHandle) : UpdateQumaHandle86(qumaHandle);
+            #endregion
 
             #endregion
 
@@ -875,13 +1008,13 @@ namespace Baku.Quma.Low.Api
             /// デバイスのセンサ情報を更新します。このメソッドは正常更新以外のケースで例外を投げます。
             /// </summary>
             /// <param name="qumaHandle">対象のデバイス。</param>
-            /// <exception cref="QumaException">正常更新以外のケースで発生</exception>
+            /// <exception cref="QmLowException">正常更新以外のケースで発生</exception>
             public static void UpdateBuffer(QumaHandle qumaHandle)
             {
                 var res = UpdateBuffer(qumaHandle.Handle);
                 if (res != QumaLowResponse.OK)
                 {
-                    throw new QumaException(res);
+                    throw new QmLowException(res);
                 }
             }
 
@@ -902,13 +1035,13 @@ namespace Baku.Quma.Low.Api
             /// このメソッドは正常に呼ばれた場合以外で例外を発生させます。
             /// </summary>
             /// <param name="qumaHandle">Qumaのハンドル</param>
-            /// <exception cref="QumaException">呼び出しに失敗した場合</exception>
+            /// <exception cref="QmLowException">呼び出しに失敗した場合</exception>
             public static void UpdateQumaHandle(QumaHandle qumaHandle)
             {
                 var res = UpdateQumaHandle(qumaHandle.Handle);
                 if(res != QumaLowResponse.OK)
                 {
-                    throw new QumaException(res);
+                    throw new QmLowException(res);
                 }
             }
 
@@ -918,24 +1051,28 @@ namespace Baku.Quma.Low.Api
         /// <summary>ボタンのAPI</summary>
         public static class Button
         {
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetButtonState@@YAHPAXW4QMLOW_BUTTON_TYPE@@PAW4QMLOW_BUTTON_STATE@@@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetButtonState@@YAHPEAXW4QMLOW_BUTTON_TYPE@@PEAW4QMLOW_BUTTON_STATE@@@Z")]
-#endif
-            private static extern QumaLowResponse GetButtonState(IntPtr qumaHandle, ButtonType buttonType, ref ButtonState buttonState);
+            #region GetButtonState
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetButtonState@@YAHPAXW4QMLOW_BUTTON_TYPE@@PAW4QMLOW_BUTTON_STATE@@@Z")]
+            private static extern QumaLowResponse GetButtonState86(IntPtr qumaHandle, ButtonType buttonType, ref ButtonState buttonState);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetButtonState@@YAHPEAXW4QMLOW_BUTTON_TYPE@@PEAW4QMLOW_BUTTON_STATE@@@Z")]
+            private static extern QumaLowResponse GetButtonState64(IntPtr qumaHandle, ButtonType buttonType, ref ButtonState buttonState);
+            private static QumaLowResponse GetButtonState(IntPtr qumaHandle, ButtonType buttonType, ref ButtonState buttonState)
+                => Is64bit ?
+                GetButtonState64(qumaHandle, buttonType, ref buttonState) :
+                GetButtonState86(qumaHandle, buttonType, ref buttonState);
+            #endregion
 
             /// <summary>ボタンの状態を取得します。</summary>
             /// <param name="qumaHandle">Qumaデバイスのハンドル</param>
             /// <returns>ボタンが押されてるかどうか</returns>
-            /// <exception cref="QumaException">関数呼び出しに失敗した場合発生</exception>
+            /// <exception cref="QmLowException">関数呼び出しに失敗した場合発生</exception>
             public static ButtonState GetState(QumaHandle qumaHandle)
             {
                 var result = ButtonState.Up;
                 var response = GetButtonState(qumaHandle.Handle, ButtonType.MainButton, ref result);
                 if (response != QumaLowResponse.OK)
                 {
-                    throw new QumaException(response);
+                    throw new QmLowException(response);
                 }
                 return result;
             }
@@ -964,34 +1101,41 @@ namespace Baku.Quma.Low.Api
         /// <summary>バッファ履歴API: あんま触る気がないので現状放置中</summary>
         public static class BufferHistory
         {
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBufferHistory@@YAHPAXPAPAPAX@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBufferHistory@@YAHPEAXPEAPEAPEAX@Z")]
-#endif
-            public static extern QumaLowResponse GetBufferHistory(IntPtr qumaHandle, IntPtr history);
+            #region GetBufferHistory
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBufferHistory@@YAHPAXPAPAPAX@Z")]
+            private static extern QumaLowResponse GetBufferHistory86(IntPtr qumaHandle, IntPtr history);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBufferHistory@@YAHPEAXPEAPEAPEAX@Z")]
+            public static extern QumaLowResponse GetBufferHistory64(IntPtr qumaHandle, IntPtr history);
+            public static QumaLowResponse GetBufferHistory(IntPtr qumaHandle, IntPtr history)
+                => Is64bit ? GetBufferHistory64(qumaHandle, history) : GetBufferHistory86(qumaHandle, history);
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBufferHistoryCount@@YAHPAPAX@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBufferHistoryCount@@YAHPEAPEAX@Z")]
-#endif
-            public static extern int GetBufferHistoryCount(IntPtr history);
+            #region GetBufferHistoryCount
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBufferHistoryCount@@YAHPAPAX@Z")]
+            private static extern int GetBufferHistoryCount86(IntPtr history);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowGetBufferHistoryCount@@YAHPEAPEAX@Z")]
+            private static extern int GetBufferHistoryCount64(IntPtr history);
+            public static int GetBufferHistoryCount(IntPtr history)
+                => Is64bit ? GetBufferHistoryCount64(history) : GetBufferHistoryCount86(history);
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowDeleteBufferHistory@@YAHPEAPEAX@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowDeleteBufferHistory@@YAHPAPAX@Z")]
-#endif
-            public static extern QumaLowResponse DeleteBufferHistory(IntPtr bufferHistoryHandle);
+            #region DeleteBufferHistory
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowDeleteBufferHistory@@YAHPEAPEAX@Z")]
+            private static extern QumaLowResponse DeleteBufferHistory86(IntPtr bufferHistoryHandle);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowDeleteBufferHistory@@YAHPAPAX@Z")]
+            private static extern QumaLowResponse DeleteBufferHistory64(IntPtr bufferHistoryHandle);
+            public static QumaLowResponse DeleteBufferHistory(IntPtr bufferHistoryHandle)
+                => Is64bit ? DeleteBufferHistory64(bufferHistoryHandle) : DeleteBufferHistory86(bufferHistoryHandle);
+            #endregion
 
-#if !T_X64
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowUpdateBufferOneStep@@YAHPAXPAPAXH@Z")]
-#else
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowUpdateBufferOneStep@@YAHPEAXPEAPEAXH@Z")]
-#endif
-            public static extern QumaLowResponse UpdateBufferOneStep(IntPtr qumaHandle);
-
+            #region UpdateBufferHistory
+            [DllImport(DllName86, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowUpdateBufferOneStep@@YAHPAXPAPAXH@Z")]
+            private static extern QumaLowResponse UpdateBufferOneStep86(IntPtr qumaHandle);
+            [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmLowUpdateBufferOneStep@@YAHPEAXPEAPEAXH@Z")]
+            private static extern QumaLowResponse UpdateBufferOneStep64(IntPtr qumaHandle);
+            public static QumaLowResponse UpdateBufferOneStep(IntPtr qumaHandle)
+                => Is64bit ? UpdateBufferOneStep64(qumaHandle) : UpdateBufferOneStep86(qumaHandle);
+            #endregion
 
         }
     }

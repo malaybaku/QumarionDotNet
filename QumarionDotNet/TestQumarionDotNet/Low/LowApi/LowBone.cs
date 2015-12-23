@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Baku.Quma.Low.Api;
 using Baku.Quma.Low;
 
-namespace TestQumarionDotNet
+namespace TestQumarionDotNet.Low
 {
     /// <summary>
     /// ボーン関連のテストです。
@@ -12,7 +12,7 @@ namespace TestQumarionDotNet
     /// テストする方が効率的なため、ここではルートボーンを中心としたテストのみを行います。
     /// </summary>
     [TestClass]
-    public class LowBone
+    public class LowBoneTest
     {
         //このクラスのテストで用いるQumaのデバイス種類を指定します。
         public static readonly QumaTypes TargetType = QumaTypes.Software;

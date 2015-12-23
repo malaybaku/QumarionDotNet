@@ -5,7 +5,7 @@ using Baku.Quma.Low;
 using Baku.Quma.Low.Api;
 using System.Threading;
 
-namespace TestQumarionDotNet
+namespace TestQumarionDotNet.Low
 {
     public static class QumaTestContextSetting
     {
@@ -23,10 +23,7 @@ namespace TestQumarionDotNet
             QmLow.BaseOperation.Initialize();
         }
 
-        public static QumaContext Create()
-        {
-            return new QumaContext();
-        }
+        public static QumaContext Create() => new QumaContext();
 
         public void Dispose()
         {

@@ -23,13 +23,13 @@ namespace TestQumarionDotNet.Pdk
         [TestMethod]
         public void Pdk_デバイス必須_デフォルトデバイス取得()
         {
-            var quma = QumarionLoader.Load();
+            var quma = LoadQumaHandle();
         }
 
         [TestMethod]
         public void Pdk_デバイス必須_アタッチ済みモデル数チェック()
         {
-            var quma = QumarionLoader.Load();
+            var quma = LoadQumaHandle();
             int count = QmPdk.Quma.GetAttachedModelCount(quma);
             Assert.IsTrue(count >= 0);
         }
@@ -37,7 +37,7 @@ namespace TestQumarionDotNet.Pdk
         [TestMethod]
         public void Pdk_デバイス必須_デバイス名取得()
         {
-            var quma = QumarionLoader.Load();
+            var quma = LoadQumaHandle();
             string deviceName = QmPdk.Quma.GetDeviceName(quma);
             Assert.IsFalse(string.IsNullOrEmpty(deviceName));
         }
@@ -45,7 +45,7 @@ namespace TestQumarionDotNet.Pdk
         [TestMethod]
         public void Pdk_デバイス必須_デバイスのイネーブル設定()
         {
-            var quma = QumarionLoader.Load();
+            var quma = LoadQumaHandle();
             QmPdk.Quma.SetEnableQuma(quma, false);
             bool isEnabled = QmPdk.Quma.GetEnableQuma(quma);
             Assert.AreEqual(false, isEnabled);
@@ -59,7 +59,7 @@ namespace TestQumarionDotNet.Pdk
         [TestMethod]
         public void Pdk_デバイス必須_デバイス加速度センサ設定()
         {
-            var quma = QumarionLoader.Load();
+            var quma = LoadQumaHandle();
             QmPdk.Quma.SetEnableAccelerometer(quma, true);
             QmPdk.Quma.SetEnableAccelerometer(quma, false);
         }
@@ -67,34 +67,35 @@ namespace TestQumarionDotNet.Pdk
         [TestMethod]
         public void Pdk_デバイス必須_ボタン状態_オフ_取得()
         {
-            var quma = QumarionLoader.Load();
+            var quma = LoadQumaHandle();
             var button = QmPdk.Quma.GetButtonState(quma);
             Assert.AreEqual(QumaButtonState.Up, button);
         }
 
         [TestMethod]
+        public void Pdk_デバイス必須_ポーズ変化チェック_関数呼び出しのみ()
+        {
+            //NOTE: CheckIsPoseChanged関数は見た感じだと戻り値がイマイチ信用できない気がする
+            var quma = LoadQumaHandle();
+            QmPdk.Quma.CheckIsPoseChanged(quma);
+        }
+
+        [TestMethod]
         public void Pdk_デバイス必須_デバイス状態確認()
         {
-            var quma = QumarionLoader.Load();
+            var quma = LoadQumaHandle();
             QmPdk.Quma.CheckDeviceValidity(quma);
         }
 
         [TestMethod]
         public void Pdk_デバイス必須_センサー状態確認()
         {
-            var quma = QumarionLoader.Load();
+            var quma = LoadQumaHandle();
             var state = QmPdk.Quma.CheckDeviceSensors(quma);
             Assert.IsTrue(state.IsOk);
         }
 
-        //NOTE: 以下の関数はCharacterModelと連携するのでこのソースファイルでは検証しない
-        //QmPdk.Quma.AttachInitPoseModel
-        //QmPdk.Quma.DetachModel
-    }
-
-    public static class QumarionLoader
-    {
-        public static QumaHandle Load()
+        static QumaHandle LoadQumaHandle()
         {
             QmPdk.BaseOperation.Initialize();
             if (QmPdk.Quma.GetDeviceCount() == 0)
@@ -104,6 +105,7 @@ namespace TestQumarionDotNet.Pdk
 
             return QmPdk.Quma.GetHandle(0);
         }
+
     }
 
 }

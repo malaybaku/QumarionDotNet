@@ -54,9 +54,11 @@ namespace Baku.Quma.Pdk
         Down = 1
     }
 
-    /// <summary>加速度センサーから姿勢を算出する方法の一覧です。</summary>
+    /// <summary>モデルが加速度センサーから姿勢を算出する方法の一覧です。</summary>
     public enum AccelerometerMode
     {
+        /// <summary>モデルがデバイスにアタッチされていません。</summary>
+        NotAttached = 0,
         /// <summary>事前のフィルタリング処理を行いません。</summary>
         Direct = 1,
         /// <summary>フィルタ処理を行います。</summary>

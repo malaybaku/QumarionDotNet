@@ -50,51 +50,6 @@ namespace TestQumarionDotNet.Pdk
             QmPdk.Character.Destroy(indexedModelHandle.ModelHandle);
         }
 
-        [TestMethod]
-        public void Pdk_キャラ加速度センサモード設定()
-        {
-            QmPdk.BaseOperation.Initialize();
-
-            var modelHandle = QmPdk.Character.CreateStandardModelPS().ModelHandle;
-
-            QmPdk.Character.SetAccelerometerMode(modelHandle, AccelerometerMode.Direct);
-            var currentMode = QmPdk.Character.GetAccelerometerMode(modelHandle);
-            Assert.AreEqual(AccelerometerMode.Direct, currentMode);
-
-            QmPdk.Character.SetAccelerometerMode(modelHandle, AccelerometerMode.Relative);
-            currentMode = QmPdk.Character.GetAccelerometerMode(modelHandle);
-            Assert.AreEqual(AccelerometerMode.Relative, currentMode);
-
-            QmPdk.Character.Destroy(modelHandle);
-        }
-
-        [TestMethod]
-        public void Pdk_キャラ加速度センサ制約モード設定()
-        {
-            QmPdk.BaseOperation.Initialize();
-
-            var modelHandle = QmPdk.Character.CreateStandardModelPS().ModelHandle;
-
-            //いちおう他のテストに影響出にくいよう一周回して戻しておく
-            QmPdk.Character.SetRestrictAccelerometerMode(modelHandle, AccelerometerRestrictMode.None);
-            var currentMode = QmPdk.Character.GetRestrictAccelerometerMode(modelHandle);
-            Assert.AreEqual(AccelerometerRestrictMode.None, currentMode);
-
-            QmPdk.Character.SetRestrictAccelerometerMode(modelHandle, AccelerometerRestrictMode.AxisX);
-            currentMode = QmPdk.Character.GetRestrictAccelerometerMode(modelHandle);
-            Assert.AreEqual(AccelerometerRestrictMode.AxisX, currentMode);
-
-            QmPdk.Character.SetRestrictAccelerometerMode(modelHandle, AccelerometerRestrictMode.AxisZ);
-            currentMode = QmPdk.Character.GetRestrictAccelerometerMode(modelHandle);
-            Assert.AreEqual(AccelerometerRestrictMode.AxisZ, currentMode);
-
-            QmPdk.Character.SetRestrictAccelerometerMode(modelHandle, AccelerometerRestrictMode.None);
-            currentMode = QmPdk.Character.GetRestrictAccelerometerMode(modelHandle);
-            Assert.AreEqual(AccelerometerRestrictMode.None, currentMode);
-
-            QmPdk.Character.Destroy(modelHandle);
-        }
-
 
         //NOTE: キャラモデルのラッパークラス側でほぼ直接検証するので
         //      以下の関数はテストしない

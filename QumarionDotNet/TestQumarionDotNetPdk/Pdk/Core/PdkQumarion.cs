@@ -1,6 +1,4 @@
-﻿using System;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Baku.Quma.Pdk;
 
@@ -10,9 +8,9 @@ namespace TestQumarionDotNet.Pdk
     public class PdkQumarionTest
     {
         [TestMethod]
-        public void Pdk_デバイス必須_デフォルトデバイス取得とプロパティ()
+        public void Pdk高水準_デバイス必須_デフォルトデバイス取得とプロパティ()
         {
-            var device = PdkManager.GetDefaultDevice();
+            var device = PdkManager.GetDefaultQumarion();
 
             Assert.AreNotEqual(QumaHandle.QumaHandleError, device.QumaHandle.Handle);
 
@@ -30,9 +28,9 @@ namespace TestQumarionDotNet.Pdk
         }
 
         [TestMethod]
-        public void Pdk_デバイス必須_デバイスのチェック関数()
+        public void Pdk高水準_デバイス必須_デバイスのチェック関数()
         {
-            var device = PdkManager.GetDefaultDevice();
+            var device = PdkManager.GetDefaultQumarion();
             device.CheckDeviceValidity();
             device.CheckPoseChanged();
             var sensorState = device.CheckDeviceSensors();

@@ -19,30 +19,24 @@ namespace ConsoleSample
                 return;
             }
 
-            QmPdk.BaseOperation.Initialize();
             try
             {
                 //ここに何か書いてデバッグ実行してみよう！
                 Console.WriteLine(IntPtr.Size);
                 Console.WriteLine(QmPdk.BaseOperation.GetVersionStr());
 
-                if (QmPdk.Quma.GetDeviceCount() == 0)
+                if (PdkManager.ConnectedDeviceCount == 0)
                 {
                     throw new InvalidOperationException("Qumarion is not connected to this machine");
                 }
 
-                var modelHandle = QmPdk.Character.CreateStandardModelPS().ModelHandle;
+                var standardModel = PdkManager.CreateStandardModelPS();
+                var qumarion = PdkManager.GetDefaultQumarion();
 
-                //var quma = PdkManager.GetDefaultDevice();
-                //QmPdk.Quma.AttachInitPoseModel(quma.QumaHandle, modelHandle);
+                standardModel.AttachQumarion(qumarion);
 
-                QmPdk.Character.SetAccelerometerMode(modelHandle, AccelerometerMode.Direct);
-                var currentMode = QmPdk.Character.GetAccelerometerMode(modelHandle);
 
-                QmPdk.Character.SetAccelerometerMode(modelHandle, AccelerometerMode.Relative);
-                currentMode = QmPdk.Character.GetAccelerometerMode(modelHandle);
 
-                QmPdk.Character.Destroy(modelHandle);
             }
             catch (QmPdkException ex)
             {

@@ -88,8 +88,10 @@
   <ItemGroup>
     <Compile Include="Pdk\Core\PdkCharacterModel.cs" />
     <Compile Include="Pdk\Core\PdkQumarion.cs" />
+    <Compile Include="Pdk\PdkApi\PdkApiTestUtil.cs" />
     <Compile Include="Pdk\PdkApi\PdkBaseOperation.cs" />
     <Compile Include="Pdk\PdkApi\PdkCharacter.cs" />
+    <Compile Include="Pdk\PdkApi\PdkCharacterAndQumarion.cs" />
     <Compile Include="Pdk\PdkApi\PdkNiNinBaori.cs" />
     <Compile Include="Pdk\PdkApi\PdkQumarion.cs" />
     <Compile Include="Pdk\PdkApi\PdkTemplateBone.cs" />

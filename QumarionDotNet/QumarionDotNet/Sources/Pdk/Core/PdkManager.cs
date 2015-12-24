@@ -10,6 +10,9 @@ namespace Baku.Quma.Pdk
     /// </summary>
     public static class PdkManager
     {
+        /// <summary>ライブラリのバージョンを表す文字列を取得します。</summary>
+        public static string Version { get; } = QmPdk.BaseOperation.GetVersionStr();
+
         /// <summary>ライブラリが初期化済みであるかどうかを取得します。</summary>
         public static bool Initialized => QmPdk.BaseOperation.Initialized;
 
@@ -28,7 +31,7 @@ namespace Baku.Quma.Pdk
 
         /// <summary>あらかじめ定義されている標準人型ボーンをロードします。</summary>
         /// <returns>ライブラリで定義された標準人型ボーン</returns>
-        public static CharacterModel CreateStandardModelPS()
+        public static StandardCharacterModel CreateStandardModelPS()
         {
             Initialize();
             return StandardCharacterModel.CreateStandardModelPS();
@@ -50,7 +53,7 @@ namespace Baku.Quma.Pdk
         /// </summary>
         /// <returns>Qumarionデバイス(一つも見つからなければ<see cref="InvalidOperationException"/>がスローされます)</returns>
         /// <exception cref="InvalidOperationException" />
-        public static Qumarion GetDefaultDevice() => GetQumarionByIndex(0);
+        public static Qumarion GetDefaultQumarion() => GetQumarionByIndex(0);
 
         /// <summary>
         /// デバイスをインデックス指定によって取得します。

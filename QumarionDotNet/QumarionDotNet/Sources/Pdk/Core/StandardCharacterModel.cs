@@ -23,7 +23,7 @@ namespace Baku.Quma.Pdk
 
         /// <summary>あらかじめ定義されている標準人型ボーンをロードします。</summary>
         /// <returns>ライブラリで定義された標準人型ボーン</returns>
-        internal static CharacterModel CreateStandardModelPS()
+        internal static StandardCharacterModel CreateStandardModelPS()
         {
             var imh = QmPdk.Character.CreateStandardModelPS();
             var rootBone = Bone.LoadCharacterStandardModelPSRootBone(imh.ModelHandle, imh.Indexes);

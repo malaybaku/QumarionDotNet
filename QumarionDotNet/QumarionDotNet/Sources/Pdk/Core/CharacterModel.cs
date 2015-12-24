@@ -26,7 +26,16 @@ namespace Baku.Quma.Pdk
         public AccelerometerMode AccelerometerMode
         {
             get { return QmPdk.Character.GetAccelerometerMode(ModelHandle); }
-            set { QmPdk.Character.SetAccelerometerMode(ModelHandle, value); }
+            set
+            {
+                if(value == AccelerometerMode.NotAttached)
+                {
+                    throw new ArgumentException(
+                        $"{AccelerometerMode.NotAttached} cannot be used to set: use {AccelerometerMode.Direct} or {AccelerometerMode.Relative}"
+                        );
+                }
+                QmPdk.Character.SetAccelerometerMode(ModelHandle, value);
+            }
         }
 
         /// <summary>加速度センサーの制限モードを取得、設定します。</summary>

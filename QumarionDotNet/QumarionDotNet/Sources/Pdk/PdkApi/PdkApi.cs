@@ -769,7 +769,7 @@ namespace Baku.Quma.Pdk.Api
             [DllImport(DllName64, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?QmPdkIsEnable@@YAHHPEAH@Z")]
             private static extern QmErrorCode IsEnable64(int qumaHandle, out int isEnable);
             private static QmErrorCode IsEnable(int qumaHandle, out int isEnable)
-                => Is64bit ? IsEnable86(qumaHandle, out isEnable) : IsEnable(qumaHandle, out isEnable);
+                => Is64bit ? IsEnable64(qumaHandle, out isEnable) : IsEnable86(qumaHandle, out isEnable);
             #endregion
 
             #region EnableAccelerometer
@@ -902,9 +902,7 @@ namespace Baku.Quma.Pdk.Api
             /// <param name="qumaHandle">適用先のデバイス</param>
             /// <param name="enable">デバイスを有効化するかどうか</param>
             public static void SetEnableQuma(QumaHandle qumaHandle, bool enable)
-            {
-                ThrowIfError(Enable(qumaHandle.Handle, Convert.ToInt32(enable)));
-            }
+                => ThrowIfError(Enable(qumaHandle.Handle, Convert.ToInt32(enable)));
 
             /// <summary>QUMAデバイスが現在有効化されているかどうかを取得します。</summary>
             /// <param name="qumaHandle">確認先のデバイス</param>
@@ -920,13 +918,11 @@ namespace Baku.Quma.Pdk.Api
             /// <param name="qumaHandle">設定対象のデバイス</param>
             /// <param name="enable">有効化する場合は<see cref="true"/>、無効化する場合は<see cref="false"/></param>
             public static void SetEnableAccelerometer(QumaHandle qumaHandle, bool enable)
-            {
-                ThrowIfError(EnableAccelerometer(qumaHandle.Handle, Convert.ToInt32(enable)));
-            }
+                => ThrowIfError(EnableAccelerometer(qumaHandle.Handle, Convert.ToInt32(enable)));
 
             /// <summary>デバイスのボタンの状態を取得します。
-            /// <param name="qumaHandle"></param>
-            /// <returns></returns>
+            /// <param name="qumaHandle">確認先のデバイス</param>
+            /// <returns>現在のボタンの状態</returns>
             public static QumaButtonState GetButtonState(QumaHandle qumaHandle)
             {
                 QumaButtonState state;
@@ -942,16 +938,12 @@ namespace Baku.Quma.Pdk.Api
             /// <param name="qumaHandle">関連付けたいデバイス</param>
             /// <param name="modelHandle">関連付けたいモデル</param>
             public static void AttachInitPoseModel(QumaHandle qumaHandle, ModelHandle modelHandle)
-            {
-                ThrowIfError(AttachInitPoseModel(qumaHandle.Handle, modelHandle.Handle));
-            }
+                => ThrowIfError(AttachInitPoseModel(qumaHandle.Handle, modelHandle.Handle));
 
             /// <summary>モデルをデバイスから切断します。</summary>
             /// <param name="modelHandle">切断したいモデル</param>
             public static void DetachModel(ModelHandle modelHandle)
-            {
-                ThrowIfError(DetachModel(modelHandle.Handle));
-            }
+                => ThrowIfError(DetachModel(modelHandle.Handle));
 
             /// <summary>
             /// デバイスのポーズが前回から変更されたかを取得します。
@@ -988,9 +980,7 @@ namespace Baku.Quma.Pdk.Api
             /// </summary>
             /// <param name="qumaHandle">確認先のデバイス</param>
             public static void CheckDeviceValidity(QumaHandle qumaHandle)
-            {
-                ThrowIfError(GetDeviceState(qumaHandle.Handle));
-            }
+                => ThrowIfError(GetDeviceState(qumaHandle.Handle));
 
             /// <summary>デバイスのセンサ状態を確認します。</summary>
             /// <param name="qumaHandle">確認したいデバイス</param>

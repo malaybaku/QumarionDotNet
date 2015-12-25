@@ -632,8 +632,7 @@ namespace Baku.Quma.Pdk.Api
             /// <param name="matrix">現在の回転行列</param>
             public static Matrix4f GetRotate(ModelHandle modelHandle, int nodeIndex)
             {
-                Matrix4f result = Matrix4f.Create();
-                var matrixPtr = Marshal.AllocHGlobal(Marshal.SizeOf(result));
+                var matrixPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Matrix4f)));
 
                 var res = GetRotate(modelHandle.Handle, nodeIndex, matrixPtr);
                 if (res != QmErrorCode.NoError)
@@ -642,7 +641,7 @@ namespace Baku.Quma.Pdk.Api
                     throw new QmPdkException(res);
                 }
 
-                Marshal.PtrToStructure(matrixPtr, result);
+                Matrix4f result = (Matrix4f)Marshal.PtrToStructure(matrixPtr, typeof(Matrix4f));
                 Marshal.FreeHGlobal(matrixPtr);
                 return result;
             }

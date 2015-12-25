@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Baku.Quma.Pdk.Api;
+using System;
 
 namespace TestQumarionDotNet.Pdk
 {
@@ -11,7 +12,15 @@ namespace TestQumarionDotNet.Pdk
         public void Pdk_バージョン取得()
         {
             string version = QmPdk.BaseOperation.GetVersionStr();
-            Assert.AreEqual("Version 1.1.0 RELEASE WIN32   Dec 10 2012 18:46:34", version);
+            bool is64bit = IntPtr.Size == 8;
+            if(is64bit)
+            {
+                Assert.AreEqual("Version 1.1.0 RELEASE WIN64   Dec 10 2012 18:20:20", version);
+            }
+            else
+            {
+                Assert.AreEqual("Version 1.1.0 RELEASE WIN32   Dec 10 2012 18:46:34", version);
+            }
         }
 
         [TestMethod]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Baku.Quma.Pdk
 {
@@ -55,11 +56,32 @@ namespace Baku.Quma.Pdk
             }
         }
 
-        /// <summary>行列の表す平行移動成分成分を取得します。</summary>
-        /// <returns>平行移動成分</returns>
-        public Vector3f GetTranslate()
+        /// <summary>行列の表す平行移動成分を取得します。</summary>
+        public Vector3f Translate => new Vector3f(this[0, 3], this[1, 3], this[2, 3]);
+
+        /// <summary>行列のうち平行移動成分を0としたものを取得します。</summary>
+        public Matrix4f Rotate
         {
-            return new Vector3f(this[3, 0], this[3, 1], this[3, 2]);
+            get
+            {
+                var result = Create();
+                result.CopyRotationFrom(this);
+                return result;
+            }
+        }
+
+        /// <summary>平行移動成分を行列形式で表したものを取得します。</summary>
+        public Matrix4f TranslateAsMatrix
+        {
+            get
+            {
+                var result = Create();
+                var t = Translate;
+                result[0, 3] = t.X;
+                result[1, 3] = t.Y;
+                result[2, 3] = t.Z;
+                return result;
+            }
         }
 
         /// <summary>別の行列から成分値をコピーします。</summary>
@@ -82,7 +104,44 @@ namespace Baku.Quma.Pdk
             }
         }
 
+        /// <summary>行列の積を求めます。</summary>
+        /// <param name="m">掛けられる行列</param>
+        /// <returns>行列積</returns>
+        public Matrix4f Multiply(Matrix4f m)
+        {
+            var result = Create();
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    for (int k = 0; k < 4; k++)
+                    {
+                        result[i, j] += this[i, k] * m[k, j];
+                    }
+                }
+            }
+            return result;
+        }
 
+
+        public override string ToString()
+        {
+            var result = new StringBuilder();
+            result.Append("[");
+
+            for (int i = 0; i < 4; i++)
+            {
+                result.Append("[");
+                for (int j = 0; j < 4; j++)
+                {
+                    result.Append(this[i, j].ToString("0.000") + ", ");
+                }
+                result.Append("], ");
+            }
+
+            result.Append("]");
+            return result.ToString();
+        }
     }
 
 }

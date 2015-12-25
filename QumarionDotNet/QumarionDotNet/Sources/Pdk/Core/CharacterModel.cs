@@ -59,7 +59,12 @@ namespace Baku.Quma.Pdk
         }
 
         /// <summary>Qumaデバイスから最新情報を取得し、モデルに適用します。</summary>
-        public void Update() => QmPdk.BaseOperation.CopyPose(ModelHandle);
+        public void Update()
+        {
+            QmPdk.BaseOperation.CopyPose(ModelHandle);
+            //追加: 状態量としてワールド座標系を保持させる。
+            Root.UpdateWorldMatrix();
+        }
 
         /// <summary>現在のQumaデバイスとモデルのポーズを対応付けます。</summary>
         public void Calibrate() => QmPdk.BaseOperation.CalibratePose(ModelHandle);

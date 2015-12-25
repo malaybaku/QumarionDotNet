@@ -72,7 +72,7 @@ namespace QumarionDataViewer
             try
             {
 
-                foreach (var qumaId in QumarionManager.GetQumaIds())
+                foreach (var qumaId in QumarionManager.GetHardwareQumaIds())
                 {
                     var deviceLoaderViewModel = new DeviceLoaderViewModel(qumaId);
                     deviceLoaderViewModel.DeviceLoaded += OnDeviceLoaded;

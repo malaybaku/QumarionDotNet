@@ -20,7 +20,6 @@ namespace Baku.Quma.Pdk
             var nodeNames = QmPdk.Character.GetName(modelHandle, index);
             Name = nodeNames.Name;
             OriginalName = nodeNames.OriginalName;
-            LocalMatrix = Matrix4f.Create();
         }
 
         /// <summary><see cref="TemplateModel"/>用のコンストラクタ</summary>
@@ -33,7 +32,6 @@ namespace Baku.Quma.Pdk
             Index = index;
             Name = QmPdk.TemplateBone.GetName(modelHandle, index);
             OriginalName = Name;
-            LocalMatrix = Matrix4f.Create();
 
             Parent = parent;
             Root = (parent != null) ? parent.Root : this;
@@ -65,14 +63,23 @@ namespace Baku.Quma.Pdk
 
         //NOTE: 行列は再代入できると参照云々とかまずそうなので要注意
 
-        /// <summary>初期状態(Tポーズ)での回転を取得します。</summary>
-        public Matrix4f LocalMatrix { get; }
+        /// <summary>初期状態(Tポーズ)でのローカル座標上における並進および回転行列を取得します。</summary>
+        public Matrix4f InitialLocalMatrix { get; } = Matrix4f.Create();
+
+        /// <summary>初期状態(Tポーズ)でのワールド座標上における並進および回転行列を取得します。</summary>
+        public Matrix4f InitialWorldMatrix { get; } = Matrix4f.Create();
 
         /// <summary>
         /// ボーンの回転つまり可動部の動きを取得します。
         /// 取得のたびにAPIアクセスを行うため、必要以上に頻繁に呼ばないよう注意してください。
         /// </summary>
-        public Matrix4f RotationMatrix => QmPdk.Character.GetLocalMatrix(ModelHandle, Index);
+        public Matrix4f LocalMatrix => QmPdk.Character.GetLocalMatrix(ModelHandle, Index);
+
+        /// <summary>現在のワールド座標上における並進および回転行列を取得します。</summary>
+        public Matrix4f WorldMatrix { get; } = Matrix4f.Create();
+
+        //NOTE: RotationはLocalMatrixの並進部分がゼロになってるだけのを取得する関数なので実装価値なさそう
+        //public Matrix4f Rotation => QmPdk.Character.GetRotate(ModelHandle, Index);
 
         /// <summary>このボーン、およびボーンの子孫ボーンを再帰的にすべて取得します。</summary>
         /// <returns>子孫ボーンの一覧</returns>
@@ -83,6 +90,45 @@ namespace Baku.Quma.Pdk
                 );
         }
 
+        /// <summary>ワールド行列を最新情報に基づいて更新します。Rootのボーンで一度だけ呼び出せばボーン全体が処理されます。</summary>
+        public void UpdateWorldMatrix()
+        {
+            if (Parent == null)
+            {
+                //ルートボーンの場合
+                WorldMatrix.CopyFrom(LocalMatrix);
+            }
+            else
+            {
+                //ルート以外の場合: いわゆる移動の合成やっとけばOK   
+                WorldMatrix.CopyFrom(Parent.WorldMatrix.Multiply(LocalMatrix));
+            }
+
+            foreach (var child in Childs)
+            {
+                child.UpdateWorldMatrix();
+            }
+        }
+
+        /// <summary>再帰的に処理を行い、ワールド座標における各ボーンの位置と方向を計算します。</summary>
+        private void SetInitialWorldMatrix()
+        {
+            if (Parent == null)
+            {
+                //ルートボーンの場合
+                InitialWorldMatrix.CopyFrom(InitialLocalMatrix);
+            }
+            else
+            {
+                //ルート以外の場合: いわゆる移動の合成やっとけばOK   
+                InitialWorldMatrix.CopyFrom(Parent.InitialWorldMatrix.Multiply(InitialLocalMatrix));
+            }
+
+            foreach (var child in Childs)
+            {
+                child.SetInitialWorldMatrix();
+            }
+        }
 
         /// <summary>
         /// モデル、インデックス、親ボーンを指定してテンプレートボーンを生成します。
@@ -123,7 +169,7 @@ namespace Baku.Quma.Pdk
             for (int i = 0; i < parentIndexes.Length; i++)
             {
                 bones[i] = new Bone(modelHandle, i);
-                bones[i].LocalMatrix.CopyFrom(QmPdk.Character.GetLocalMatrix(modelHandle, i));
+                bones[i].InitialLocalMatrix.CopyFrom(QmPdk.Character.GetLocalMatrix(modelHandle, i));
             }
 
             //ヒューリスティックとしてbones[0]がStandardModelPSではHipsなハズだけど一応一般性を高くしておく
@@ -161,6 +207,9 @@ namespace Baku.Quma.Pdk
                     .Select(j => bones[j])
                     .ToArray();
             }
+
+            //追加: Tポーズ時にワールド座標からモデルを見たときのデータを取得
+            rootBone.SetInitialWorldMatrix();
 
             return rootBone;
         }

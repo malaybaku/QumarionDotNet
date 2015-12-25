@@ -24,8 +24,24 @@ namespace TestQumarionDotNet.Pdk
             }
         }
 
+        [TestMethod]
+        public void Pdk高水準_デバイス必須_標準モデルのUpdate処理呼び出し()
+        {
+            //NOTE: ユーザプログラマが行う最小処理もこんな感じ
+            using (var model = PdkManager.CreateStandardModelPS())
+            {
+                model.AttachQumarion(PdkManager.GetDefaultQumarion());
 
+                model.Update();
 
+                var boneMatrices = model
+                    .Bones
+                    .Select(kvp => kvp.Value.LocalMatrix)
+                    .ToArray();
 
+                var boneValues = boneMatrices.Select(bm => bm.GetValues()).ToArray();
+
+            }
+        }
     }
 }

@@ -24,7 +24,7 @@ namespace TestQumarionDotNet.Low
         [TestMethod]
         public void Low_ライブラリバージョン確認()
         {
-            using (QumaContext.Create())
+            using (var _  = new QumaContext())
             {
                 string version = QmLow.BaseOperation.GetVersion();
                 //若干適当なチェックだけど、まあ、いいでしょ別に。
@@ -41,7 +41,7 @@ namespace TestQumarionDotNet.Low
         [TestMethod]
         public void Low_デバッグ出力設定()
         {
-            using (QumaContext.Create())
+            using (var _ = new QumaContext())
             {
                 QmLow.BaseOperation.SetDebugWrite(true);
                 QmLow.BaseOperation.SetDebugWrite(false);
@@ -51,7 +51,7 @@ namespace TestQumarionDotNet.Low
         [TestMethod]
         public void Low_座標系設定()
         {
-            using (QumaContext.Create())
+            using (var _ = new QumaContext())
             {
                 QmLow.BaseOperation.SetCoordinateSystem(CoordinateSystem.RightHand);
                 QmLow.BaseOperation.SetCoordinateSystem(CoordinateSystem.LeftHand);
@@ -61,7 +61,7 @@ namespace TestQumarionDotNet.Low
         [TestMethod]
         public void Low_回転方向設定()
         {
-            using (QumaContext.Create())
+            using (var _ = new QumaContext())
             {
                 QmLow.BaseOperation.SetRotateDirection(RotateDirection.Left);
                 QmLow.BaseOperation.SetRotateDirection(RotateDirection.Right);

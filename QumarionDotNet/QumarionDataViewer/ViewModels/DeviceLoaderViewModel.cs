@@ -23,7 +23,7 @@ namespace QumarionDataViewer
 
         public void LoadDevice()
         {
-            var device = Qumarion.LoadDeviceFromQumaId(_qumaId);
+            var device = QumarionManager.GetDeviceById(_qumaId);
             DeviceLoaded?.Invoke(this, new QumarionDeviceLoadedEventArgs(device));
         }
         

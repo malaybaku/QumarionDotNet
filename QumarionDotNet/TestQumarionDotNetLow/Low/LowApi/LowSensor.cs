@@ -16,12 +16,11 @@ namespace TestQumarionDotNet.Low
     [TestClass]
     public class LowSensorTest
     {
-        static readonly QumaTypes TargetType = QumaTypes.Software;
 
         [TestMethod]
         public void Low_センサー個数取得()
         {
-            using (var context = QumaRootBoneContext.Create(TargetType))
+            using (var context = new QumaRootBoneContext())
             {
                 //Rootにはセンサが無さそうなので腰っぽい場所まで手を伸ばして確認しに行く
                 var waistBoneHandle = QmLow.Bone.GetChildBone(context.RootBoneHandle, 0);
@@ -37,7 +36,7 @@ namespace TestQumarionDotNet.Low
         [TestMethod]
         public void Low_センサーインデクス取得_正常系()
         {
-            using (var context = QumaRootBoneContext.Create(TargetType))
+            using (var context = new QumaRootBoneContext())
             {
                 //Rootにはセンサが無さそうなので腰っぽい場所まで手を伸ばして確認しに行く
                 var waistBoneHandle = QmLow.Bone.GetChildBone(context.RootBoneHandle, 0);
@@ -48,7 +47,7 @@ namespace TestQumarionDotNet.Low
         [TestMethod]
         public void Low_センサーインデクス取得_異常系()
         {
-            using (var context = QumaRootBoneContext.Create(TargetType))
+            using (var context = new QumaRootBoneContext())
             {
                 SensorHandle sensorHandle = QmLow.Sensors.GetSensor(context.RootBoneHandle, 10);
                 Assert.AreEqual(IntPtr.Zero, sensorHandle.Handle);
@@ -58,7 +57,7 @@ namespace TestQumarionDotNet.Low
         [TestMethod]
         public void Low_センサー一覧取得()
         {
-            using (var context = QumaRootBoneContext.Create(TargetType))
+            using (var context = new QumaRootBoneContext())
             {
                 int count = QmLow.Sensors.GetSensorCount(context.RootBoneHandle);
                 var sensors = QmLow.Sensors.GetSensors(context.RootBoneHandle);
@@ -69,7 +68,7 @@ namespace TestQumarionDotNet.Low
         [TestMethod]
         public void Low_センサーコンテキスト取得確認_テスト用のテスト()
         {
-            using (var context = QumaWaistSensorContext.Create(QumaTypes.Software))
+            using (var context = new QumaWaistSensorContext())
             {
                 Assert.IsNotNull(context);
                 Assert.IsNotNull(context.QumaHandle);
@@ -80,7 +79,7 @@ namespace TestQumarionDotNet.Low
         [TestMethod]
         public void Low_センサー回転軸取得()
         {
-            using (var context = QumaWaistSensorContext.Create(QumaTypes.Software))
+            using (var context = new QumaWaistSensorContext())
             {
                 Vector3 axis = QmLow.Sensors.GetSensorAxis(context.WaistSensorHandle);
                 //結果が零ベクトル以外で初期化されたことをチェックするだけ
@@ -91,7 +90,7 @@ namespace TestQumarionDotNet.Low
         [TestMethod]
         public void Low_センサー状態取得()
         {
-            using (var context = QumaWaistSensorContext.Create(QumaTypes.Software))
+            using (var context = new QumaWaistSensorContext())
             {
                 SensorStates state = QmLow.Sensors.GetSensorState(context.QumaHandle, context.WaistSensorHandle);
                 Assert.AreEqual(SensorStates.OK, state);
@@ -101,7 +100,7 @@ namespace TestQumarionDotNet.Low
         [TestMethod]
         public void Low_センサー角度取得1()
         {
-            using (var context = QumaWaistSensorContext.Create(QumaTypes.Software))
+            using (var context = new QumaWaistSensorContext())
             {
                 float angle = QmLow.Sensors.ComputeSensorAngle(context.QumaHandle, context.WaistSensorHandle);
             }
@@ -110,7 +109,7 @@ namespace TestQumarionDotNet.Low
         [TestMethod]
         public void Low_センサー角度取得2()
         {
-            using (var context = QumaWaistSensorContext.Create(QumaTypes.Software))
+            using (var context = new QumaWaistSensorContext())
             {
                 float angle = 0.0f;
                 var response = QmLow.Sensors.TryComputeSensorAngle(context.QumaHandle, context.WaistSensorHandle, ref angle);
@@ -121,7 +120,7 @@ namespace TestQumarionDotNet.Low
         [TestMethod]
         public void Low_加速度計生取得()
         {
-            using (var context = QumaActiveDeviceContext.Create(QumaTypes.Software))
+            using (var context = new QumaActiveDeviceContext())
             {
                 Vector3 accel = QmLow.Sensors.GetAccelerometer(context.QumaHandle);
             }
@@ -130,7 +129,7 @@ namespace TestQumarionDotNet.Low
         [TestMethod]
         public void Low_加速度計フィルタ済み行列取得()
         {
-            using (var context = QumaActiveDeviceContext.Create(QumaTypes.Software))
+            using (var context = new QumaActiveDeviceContext())
             {
                 Matrix4 matrix = QmLow.Sensors.GetAccelerometerPoseMatrix(context.QumaHandle);
             }

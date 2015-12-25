@@ -53,7 +53,7 @@ namespace TestQumarionDotNet.Pdk
                 Assert.AreEqual(AccelerometerRestrictMode.None, currentMode);
             }
         }
-    
+
         //デバイスをアタッチせずに加速度センサ設定を行った場合の想定挙動が下記の二つ。
 
         [TestMethod]
@@ -62,7 +62,10 @@ namespace TestQumarionDotNet.Pdk
             using (var context = new QumaAndModelContext(false))
             {
                 var currentMode = QmPdk.Character.GetAccelerometerMode(context.ModelHandle);
-                Assert.AreEqual(AccelerometerMode.NotAttached, currentMode);
+                //NOTE: QUMAが未割当の場合、対応するメモリデータが未初期化なのでランダムな整数値が帰ってくるっぽい。邪悪。
+                Assert.AreNotEqual(AccelerometerMode.NotAttached, currentMode);
+                Assert.AreNotEqual(AccelerometerMode.Direct, currentMode);
+                Assert.AreNotEqual(AccelerometerMode.Relative, currentMode);
             }
         }
 

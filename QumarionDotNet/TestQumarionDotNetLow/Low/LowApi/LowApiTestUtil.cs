@@ -9,7 +9,10 @@ namespace TestQumarionDotNet.Low
 {
     public static class QumaTestContextSetting
     {
-        /// <summary>実行コンテキストの終了時にExit処理を行うかどうかの設定です。</summary>
+        /// <summary>
+        /// 実行コンテキストの終了時にExit処理を行うかどうかの設定です。
+        /// NOTE: trueにすると連続でテストするときに不安定化の原因になるっぽい
+        /// </summary>
         public readonly static bool ExitEachTimeWhenContextDisposed = false;
     }
 
@@ -18,12 +21,10 @@ namespace TestQumarionDotNet.Low
     /// </summary>
     public class QumaContext : IDisposable
     {
-        private QumaContext()
+        public QumaContext()
         {
             QmLow.BaseOperation.Initialize();
         }
-
-        public static QumaContext Create() => new QumaContext();
 
         public void Dispose()
         {
@@ -39,39 +40,29 @@ namespace TestQumarionDotNet.Low
     /// </summary>
     public class QumaActiveDeviceContext : IDisposable
     {
-        private QumaActiveDeviceContext(QumaHandle qumaHandle)
+        public QumaActiveDeviceContext()
         {
-            QumaHandle = qumaHandle;
-        }
-
-        public QumaHandle QumaHandle { get; }
-
-        /// <summary>
-        /// デバイスの種類を指定してデバイスつきのコンテキストを取得します。
-        /// </summary>
-        /// <param name="requiredType">使用するデバイスの種類</param>
-        /// <returns></returns>
-        public static QumaActiveDeviceContext Create(QumaTypes requiredType)
-        {
-            QmLow.BaseOperation.Initialize();
+            _qumaContext = new QumaContext();
 
             var ids = QmLow.Device.EnumerateQumaIDs();
-            var hardwareId = ids.FirstOrDefault(id => id.QumaType == requiredType);
+            var hardwareId = ids.FirstOrDefault(id => id.QumaType == QumaTypes.HardwareAsai);
 
             var qumaHandle = QmLow.Device.GetQumaHandle(hardwareId);
             QmLow.Device.ActivateQuma(qumaHandle);
             //NOTE: 時間を空けないとUpdateやらなんやらの処理がまともに通らないっぽい？
             Thread.Sleep(1000);
 
-            return new QumaActiveDeviceContext(qumaHandle);
+            QumaHandle = qumaHandle;
         }
+
+        private readonly QumaContext _qumaContext;
+
+        public QumaHandle QumaHandle { get; }
 
         public void Dispose()
         {
-            if (QumaTestContextSetting.ExitEachTimeWhenContextDisposed)
-            {
-                QmLow.BaseOperation.Exit();
-            }
+            QmLow.Device.DeleteQumaHandle(QumaHandle);
+            _qumaContext.Dispose();
         }
     }
 
@@ -80,92 +71,39 @@ namespace TestQumarionDotNet.Low
     /// </summary>
     public class QumaRootBoneContext : IDisposable
     {
-        private QumaRootBoneContext(QumaHandle qumaHandle, BoneHandle rootBoneHandle)
+        public QumaRootBoneContext()
         {
-            QumaHandle = qumaHandle;
-            RootBoneHandle = rootBoneHandle;
+            _qumaActiveDeviceContext = new QumaActiveDeviceContext();
+
+            RootBoneHandle = QmLow.Bone.GetRootBone(QumaHandle);
         }
 
-        public QumaHandle QumaHandle { get; }
+        private readonly QumaActiveDeviceContext _qumaActiveDeviceContext;
+
+        public QumaHandle QumaHandle => _qumaActiveDeviceContext.QumaHandle;
         public BoneHandle RootBoneHandle { get; }
 
-        /// <summary>
-        /// デバイスの種類を指定してデバイスつきのコンテキストを取得します。
-        /// </summary>
-        /// <param name="requiredType">使用するデバイスの種類</param>
-        /// <returns></returns>
-        public static QumaRootBoneContext Create(QumaTypes requiredType)
-        {
-            QmLow.BaseOperation.Initialize();
-
-            var ids = QmLow.Device.EnumerateQumaIDs();
-            var hardwareId = ids.FirstOrDefault(id => id.QumaType == requiredType);
-
-            var qumaHandle = QmLow.Device.GetQumaHandle(hardwareId);
-
-            QmLow.Device.ActivateQuma(qumaHandle);
-
-            var rootBoneHandle = QmLow.Bone.GetRootBone(qumaHandle);
-            return new QumaRootBoneContext(qumaHandle, rootBoneHandle);
-        }
-
-        public void Dispose()
-        {
-            if (QumaTestContextSetting.ExitEachTimeWhenContextDisposed)
-            {
-                QmLow.BaseOperation.Exit();
-            }
-        }
+        public void Dispose() => _qumaActiveDeviceContext.Dispose();
     }
 
     /// <summary>
-    /// アクティブ化されたデバイス、ルートボーン、腰ボーンおよび腰センサのハンドルを持ったコンテキストを生成します。
+    /// アクティブ化されたデバイスおよび腰センサのハンドルを持ったコンテキストを生成します。
     /// </summary>
     public class QumaWaistSensorContext : IDisposable
     {
-        private QumaWaistSensorContext(QumaHandle qumaHandle, SensorHandle sensorHandle)
+        public QumaWaistSensorContext()
         {
-            QumaHandle = qumaHandle;
-            WaistSensorHandle = sensorHandle;
+            _qumaRootBoneContext = new QumaRootBoneContext();
+
+            var waistBoneHandle = QmLow.Bone.GetChildBone(_qumaRootBoneContext.RootBoneHandle, 0);
+            WaistSensorHandle = QmLow.Sensors.GetSensor(waistBoneHandle, 0);
         }
 
-        public QumaHandle QumaHandle { get; }
+        private readonly QumaRootBoneContext _qumaRootBoneContext;
+        public QumaHandle QumaHandle => _qumaRootBoneContext.QumaHandle;
         public SensorHandle WaistSensorHandle { get; }
 
-        /// <summary>
-        /// デバイスの種類を指定してコンテキストを取得します。
-        /// </summary>
-        /// <param name="requiredType">使用するデバイスの種類</param>
-        /// <returns></returns>
-        public static QumaWaistSensorContext Create(QumaTypes requiredType)
-        {
-            QmLow.BaseOperation.Initialize();
-
-            var ids = QmLow.Device.EnumerateQumaIDs();
-            var hardwareId = ids.FirstOrDefault(id => id.QumaType == requiredType);
-
-            var qumaHandle = QmLow.Device.GetQumaHandle(hardwareId);
-
-            QmLow.Device.ActivateQuma(qumaHandle);
-            Thread.Sleep(1000);
-
-            var rootBoneHandle = QmLow.Bone.GetRootBone(qumaHandle);
-
-            var waistBoneHandle = QmLow.Bone.GetChildBone(rootBoneHandle, 0);
-            var waistSensorHandle = QmLow.Sensors.GetSensor(waistBoneHandle, 0);
-
-
-            return new QumaWaistSensorContext(qumaHandle, waistSensorHandle);
-        }
-
-        public void Dispose()
-        {
-            if(QumaTestContextSetting.ExitEachTimeWhenContextDisposed)
-            {
-                QmLow.BaseOperation.Exit();
-            }
-        }
-
+        public void Dispose() => _qumaRootBoneContext.Dispose();
     }
 
 }

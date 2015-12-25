@@ -11,12 +11,11 @@ namespace TestQumarionDotNet.Low
     [TestClass]
     public class LowUpdateTest
     {
-        static readonly QumaTypes TargetType = QumaTypes.Software;
 
         [TestMethod]
         public void Low_通常更新1()
         {
-            using (var context = QumaActiveDeviceContext.Create(TargetType))
+            using (var context = new QumaActiveDeviceContext())
             {
                 QmLow.Update.UpdateBuffer(context.QumaHandle);
             }
@@ -24,7 +23,7 @@ namespace TestQumarionDotNet.Low
         [TestMethod]
         public void Low_通常更新2()
         {
-            using (var context = QumaActiveDeviceContext.Create(TargetType))
+            using (var context = new QumaActiveDeviceContext())
             {
                 var res = QmLow.Update.TryUpdateBuffer(context.QumaHandle);
                 Assert.AreEqual(QumaLowResponse.OK, res);
@@ -35,7 +34,7 @@ namespace TestQumarionDotNet.Low
         [ExpectedException(typeof(QmLowException))]
         public void Low_デバイス更新1_正常系で例外投げ()
         {
-            using (var context = QumaActiveDeviceContext.Create(TargetType))
+            using (var context = new QumaActiveDeviceContext())
             {
                 QmLow.Update.UpdateQumaHandle(context.QumaHandle);
             }
@@ -43,7 +42,7 @@ namespace TestQumarionDotNet.Low
         [TestMethod]
         public void Low_デバイス更新2_正常系でエラーコード()
         {
-            using (var context = QumaActiveDeviceContext.Create(TargetType))
+            using (var context = new QumaActiveDeviceContext())
             {
                 var res = QmLow.Update.TryUpdateQumaHandle(context.QumaHandle);
                 Assert.AreNotEqual(QumaLowResponse.OK, res);

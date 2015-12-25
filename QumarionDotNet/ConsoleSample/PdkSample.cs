@@ -5,6 +5,7 @@ using System.IO;
 using Baku.Quma;
 using Baku.Quma.Pdk;
 using Baku.Quma.Pdk.Api;
+using System.Threading;
 
 namespace ConsoleSample
 {
@@ -30,12 +31,30 @@ namespace ConsoleSample
                     throw new InvalidOperationException("Qumarion is not connected to this machine");
                 }
 
+                
                 var standardModel = PdkManager.CreateStandardModelPS();
                 var qumarion = PdkManager.GetDefaultQumarion();
 
+                //検証: rootボーンが隠れているというウワサがあるので確認。
+                //var names = QmPdk.Character.GetName(standardModel.ModelHandle, -1);
+
+                var mat = standardModel.Bones[StandardPSBones.Hips].InitialLocalMatrix;
+                Console.WriteLine(mat);
+
                 standardModel.AttachQumarion(qumarion);
+                qumarion.EnableAccelerometer = true;
+                standardModel.AccelerometerMode = AccelerometerMode.Relative;
+                standardModel.AccelerometerRestrictMode = AccelerometerRestrictMode.None;
 
-
+                for (int i = 0;;i++)
+                {
+                    standardModel.Update();
+                    //Console.WriteLine("update..");
+                    Thread.Sleep(500);
+                    //Console.WriteLine("local mat");
+                    var rotateMat = standardModel.Bones[StandardPSBones.Hips].LocalMatrix;
+                    Console.WriteLine(rotateMat);
+                }
 
             }
             catch (QmPdkException ex)

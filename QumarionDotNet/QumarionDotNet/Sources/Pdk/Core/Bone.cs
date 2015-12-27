@@ -64,10 +64,10 @@ namespace Baku.Quma.Pdk
         //NOTE: 行列は再代入できると参照云々とかまずそうなので要注意
 
         /// <summary>初期状態(Tポーズ)でのローカル座標上における並進および回転行列を取得します。</summary>
-        public Matrix4f InitialLocalMatrix { get; } = Matrix4f.Create();
+        public Matrix4f InitialLocalMatrix { get; private set; } = Matrix4f.Create();
 
         /// <summary>初期状態(Tポーズ)でのワールド座標上における並進および回転行列を取得します。</summary>
-        public Matrix4f InitialWorldMatrix { get; } = Matrix4f.Create();
+        public Matrix4f InitialWorldMatrix { get; private set; } = Matrix4f.Create();
 
         /// <summary>
         /// ボーンの回転つまり可動部の動きを取得します。
@@ -76,7 +76,7 @@ namespace Baku.Quma.Pdk
         public Matrix4f LocalMatrix => QmPdk.Character.GetLocalMatrix(ModelHandle, Index);
 
         /// <summary>現在のワールド座標上における並進および回転行列を取得します。</summary>
-        public Matrix4f WorldMatrix { get; } = Matrix4f.Create();
+        public Matrix4f WorldMatrix { get; private set; } = Matrix4f.Create();
 
         //NOTE: RotationはLocalMatrixの並進部分がゼロになってるだけのを取得する関数なので実装価値なさそう
         //public Matrix4f Rotation => QmPdk.Character.GetRotate(ModelHandle, Index);
@@ -96,12 +96,12 @@ namespace Baku.Quma.Pdk
             if (Parent == null)
             {
                 //ルートボーンの場合
-                WorldMatrix.CopyFrom(LocalMatrix);
+                WorldMatrix = LocalMatrix;
             }
             else
             {
                 //ルート以外の場合: いわゆる移動の合成やっとけばOK   
-                WorldMatrix.CopyFrom(Parent.WorldMatrix.Multiply(LocalMatrix));
+                WorldMatrix = Parent.WorldMatrix.Multiply(LocalMatrix);
             }
 
             foreach (var child in Childs)
@@ -116,12 +116,12 @@ namespace Baku.Quma.Pdk
             if (Parent == null)
             {
                 //ルートボーンの場合
-                InitialWorldMatrix.CopyFrom(InitialLocalMatrix);
+                InitialWorldMatrix = InitialLocalMatrix;
             }
             else
             {
                 //ルート以外の場合: いわゆる移動の合成やっとけばOK   
-                InitialWorldMatrix.CopyFrom(Parent.InitialWorldMatrix.Multiply(InitialLocalMatrix));
+                InitialWorldMatrix = Parent.InitialWorldMatrix.Multiply(InitialLocalMatrix);
             }
 
             foreach (var child in Childs)
@@ -169,7 +169,7 @@ namespace Baku.Quma.Pdk
             for (int i = 0; i < parentIndexes.Length; i++)
             {
                 bones[i] = new Bone(modelHandle, i);
-                bones[i].InitialLocalMatrix.CopyFrom(QmPdk.Character.GetLocalMatrix(modelHandle, i));
+                bones[i].InitialLocalMatrix = QmPdk.Character.GetLocalMatrix(modelHandle, i);
             }
 
             //ヒューリスティックとしてbones[0]がStandardModelPSではHipsなハズだけど一応一般性を高くしておく
@@ -213,6 +213,5 @@ namespace Baku.Quma.Pdk
 
             return rootBone;
         }
-
     }
 }
